@@ -12,59 +12,100 @@ type ReferenceRecordType = ReferenceType[] | null;
 function HelloWorldTypescriptApp() {
   const STUDENTS_ON_COURSE = 110;
 
-  const base = useBase();
-  const courseTable = base.getTableByName("Меню");
-  const daysRecords = useRecords(courseTable);
+  const MENU_TABLE_NAME = "Menu";
+  const MEALS_TABLE_NAME = "Meals";
+  const MEAL_INGREDIENTS_TABLE_NAME = "MealIngredients";
+  const INGREDIENTS_TABLE_NAME = "Ingredients";
 
-  const ingredientsTable = base.getTableByName("Ингредиенты");
+  const base = useBase();
+
+  const menuTable = base.getTableByName(MENU_TABLE_NAME);
+  const daysRecords = useRecords(menuTable);
+
+  const mealsTable = base.getTableByName(MEALS_TABLE_NAME);
+  const mealsRecords = useRecords(mealsTable);
+
+  const mealIngredients = base.getTableByName(MEAL_INGREDIENTS_TABLE_NAME);
+  const mealIngredientsRecords = useRecords(mealIngredients);
+
+  const ingredientsTable = base.getTableByName(INGREDIENTS_TABLE_NAME);
   const ingredientsRecords = useRecords(ingredientsTable);
 
   let shoppingListPerPerson = {};
+  let shoppingListArr = [];
   for (const dayRecord of daysRecords) {
     const meals = dayRecord.getCellValue("Блюда") as ReferenceRecordType;
 
     if (meals) {
       for (const meal of meals) {
-        if (meal) {
-          // shoppingList.push(meal.name);
-          const mealTable = base.getTableByName(meal.name);
-          const mealTableRecords = useRecords(mealTable);
-          for (const mealTableRecord of mealTableRecords) {
-            const ingredientObj = mealTableRecord.getCellValue(
-              "Ingredient"
-            ) as ReferenceRecordType;
-            const ingredientName = ingredientObj[0].name;
+        shoppingListArr.push(meal.name);
 
-            if (shoppingListPerPerson.hasOwnProperty(ingredientName)) {
-              // add value to existing
-              shoppingListPerPerson[ingredientName] +=
-                mealTableRecord.getCellValue("Единиц на человека");
-            } else {
-              //create property with initial value
-              shoppingListPerPerson[ingredientName] =
-                mealTableRecord.getCellValue("Единиц на человека");
-            }
-            //  shoppingList.key(
-            //    `${ingredientObj[0].name}: ${mealTableRecord.getCellValue("Единиц на человека")}`
-            //  );
+        // shoppingListArr.push(JSON.stringify(mealIngredientsRecords[0].getCellValue("Meal")))
+
+        const currentMealIngredients = mealIngredientsRecords.filter((el) => {
+          const cell = el.getCellValue("Meal") as any; // TODO: find out Type
+          return cell[0].name === meal.name;
+        });
+
+        for (const currentMealIngredient of currentMealIngredients) {
+          const ingredient =
+            currentMealIngredient.getCellValue("Ingredient")[0].name;
+          const count = currentMealIngredient.getCellValue("Count") as number;
+          shoppingListArr.push(`${ingredient}: ${count}`);
+          if (shoppingListPerPerson.hasOwnProperty(ingredient)) {
+            // add value to existing
+            shoppingListPerPerson[ingredient] += count;
+          } else {
+            //create property with initial value
+            shoppingListPerPerson[ingredient] = count;
           }
         }
       }
     }
-
   }
 
   function getMeasurePointByIngredientName(ingredientName: string): string {
-  const cell = ingredientsRecords.find((el: Record) => el.name === ingredientName).getCellValue("Единица измерения") as any
-    return  cell.name;
+    const cell = ingredientsRecords
+      .find((el: Record) => el.name === ingredientName)
+      .getCellValue("Единица измерения") as any;
+    return cell.name;
+  }
+
+  function getMeasureTotalPointByIngredientName(
+    ingredientName: string
+  ): string {
+    const valueInIngredientRecord =
+      getMeasurePointByIngredientName(ingredientName);
+    switch (valueInIngredientRecord) {
+      case "грамм":
+        return "кг";
+      case "миллилитр":
+        return "л";
+      default:
+        return "ошибка...";
+    }
+  }
+
+  function calculateTolalByPersonCount(count: number): number {
+    const result = (count / 1000) * STUDENTS_ON_COURSE;
+    return Math.round(result * 10) / 10;
   }
 
   return (
     <div>
-      <h1>Закупка продуктов</h1>
       <b>Студентов на курсе: {STUDENTS_ON_COURSE}</b>
       <hr />
-      <b>Закупить на одного человека:</b>
+      <h2>Закупить продуктов:</h2>
+      <ul>
+        {Object.keys(shoppingListPerPerson).map((key: string) => (
+          <li>
+            {key}: {calculateTolalByPersonCount(shoppingListPerPerson[key])}{" "}
+            {getMeasureTotalPointByIngredientName(key)}
+          </li>
+        ))}
+      </ul>
+      <hr />
+      <h2>На одного человека:</h2>
       <ul>
         {Object.keys(shoppingListPerPerson).map((key: string) => (
           <li>
