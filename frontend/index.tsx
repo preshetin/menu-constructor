@@ -1,5 +1,5 @@
 import { initializeBlock, useBase, useRecords } from "@airtable/blocks/ui";
-import React from "react";
+import React, {useState} from "react";
 import Record from "@airtable/blocks/dist/types/src/models/record";
 
 type ReferenceType = {
@@ -16,6 +16,8 @@ function HelloWorldTypescriptApp() {
   const MEALS_TABLE_NAME = "Meals";
   const MEAL_INGREDIENTS_TABLE_NAME = "MealIngredients";
   const INGREDIENTS_TABLE_NAME = "Ingredients";
+
+  const [studentsCount, setStudentsCount] = useState(100)
 
   const base = useBase();
 
@@ -87,30 +89,21 @@ function HelloWorldTypescriptApp() {
   }
 
   function calculateTolalByPersonCount(count: number): number {
-    const result = (count / 1000) * STUDENTS_ON_COURSE;
+    const result = (count / 1000) * studentsCount;
     return Math.round(result * 10) / 10;
   }
 
   return (
     <div>
-      <b>Студентов на курсе: {STUDENTS_ON_COURSE}</b>
-      <hr />
+      <h1>Закупки</h1>
+      <b>Студентов на курсе:</b>
+      <input type="number" value={studentsCount} onChange={(event) => setStudentsCount(parseInt(event.target.value))} />
       <h2>Закупить продуктов:</h2>
       <ul>
         {Object.keys(shoppingListPerPerson).map((key: string) => (
           <li>
             {key}: {calculateTolalByPersonCount(shoppingListPerPerson[key])}{" "}
             {getMeasureTotalPointByIngredientName(key)}
-          </li>
-        ))}
-      </ul>
-      <hr />
-      <h2>На одного человека:</h2>
-      <ul>
-        {Object.keys(shoppingListPerPerson).map((key: string) => (
-          <li>
-            {key}: {shoppingListPerPerson[key]}{" "}
-            {getMeasurePointByIngredientName(key)}
           </li>
         ))}
       </ul>
