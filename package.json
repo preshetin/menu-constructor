@@ -4,6 +4,9 @@
     },
     "dependencies": {
         "@airtable/blocks": "1.8.0",
+        "@react-pdf/renderer": "^3.0.1",
+        "@types/react-pdf": "^6.2.0",
+        "events": "^3.3.0",
         "react": "^16.9.0",
         "react-dom": "^16.9.0"
     },

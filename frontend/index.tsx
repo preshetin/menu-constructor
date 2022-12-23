@@ -1,6 +1,9 @@
 import { initializeBlock, useBase, useRecords } from "@airtable/blocks/ui";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Record from "@airtable/blocks/dist/types/src/models/record";
+import MenuDocument from "./menuPdf";
+import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
+import "./styles.css"
 
 type ReferenceType = {
   id: "string";
@@ -17,7 +20,7 @@ function HelloWorldTypescriptApp() {
   const MEAL_INGREDIENTS_TABLE_NAME = "MealIngredients";
   const INGREDIENTS_TABLE_NAME = "Ingredients";
 
-  const [studentsCount, setStudentsCount] = useState(100)
+  const [studentsCount, setStudentsCount] = useState(100);
 
   const base = useBase();
 
@@ -93,11 +96,39 @@ function HelloWorldTypescriptApp() {
     return Math.round(result * 10) / 10;
   }
 
+  // return JSON.stringify(daysRecords[0].getCellValue("Блюда")) 
+
+  // return(
+  //   <PDFViewer>
+  //     <MenuDocument menuItem={daysRecords[0]} mealsRecords={mealsRecords}/> 
+  //     {/* <MenuDocument menuItem="foo" mealRecords={[1,2]}/>  */}
+  //   </PDFViewer>
+  // )
+
+  const daysButtons = daysRecords.map(dayRecord => (
+    <li key={dayRecord.id} style={{marginTop: "10px"}}>
+      {dayRecord.name}
+      {" "}
+      <PDFDownloadLink
+        document={<MenuDocument menuItem={dayRecord} mealsRecords={mealsRecords}/>}
+        fileName={`${dayRecord.name}.pdf`}
+        key={JSON.stringify(daysRecords.map(el => el.getCellValueAsString('Блюда')))}
+        className="button"
+      >
+        Скачать PDF
+      </PDFDownloadLink>
+    </li>
+  )) 
+
   return (
     <div>
       <h1>Закупки</h1>
       <b>Студентов на курсе:</b>
-      <input type="number" value={studentsCount} onChange={(event) => setStudentsCount(parseInt(event.target.value))} />
+      <input
+        type="number"
+        value={studentsCount}
+        onChange={(event) => setStudentsCount(parseInt(event.target.value))}
+      />
       <h2>Закупить продуктов:</h2>
       <ul>
         {Object.keys(shoppingListPerPerson).map((key: string) => (
@@ -106,6 +137,10 @@ function HelloWorldTypescriptApp() {
             {getMeasureTotalPointByIngredientName(key)}
           </li>
         ))}
+      </ul>
+      <h2> Распечатать меню</h2>
+      <ul>
+        {daysButtons}
       </ul>
     </div>
   );
