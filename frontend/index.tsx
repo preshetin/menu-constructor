@@ -15,10 +15,10 @@ type ReferenceRecordType = ReferenceType[] | null;
 function HelloWorldTypescriptApp() {
   const STUDENTS_ON_COURSE = 110;
 
-  const MENU_TABLE_NAME = "Menu";
-  const MEALS_TABLE_NAME = "Meals";
-  const MEAL_INGREDIENTS_TABLE_NAME = "MealIngredients";
-  const INGREDIENTS_TABLE_NAME = "Ingredients";
+  const MENU_TABLE_NAME = "Меню";
+  const MEALS_TABLE_NAME = "Блюда";
+  const MEAL_INGREDIENTS_TABLE_NAME = "Ингредиенты блюд";
+  const INGREDIENTS_TABLE_NAME = "Ингредиенты";
 
   const [studentsCount, setStudentsCount] = useState(100);
 
