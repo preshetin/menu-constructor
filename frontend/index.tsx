@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Record from "@airtable/blocks/dist/types/src/models/record";
 import MenuDocument from "./menuPdf";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
-import "./styles.css"
+import "./styles.css";
 
 type ReferenceType = {
   id: "string";
@@ -13,8 +13,6 @@ type ReferenceType = {
 type ReferenceRecordType = ReferenceType[] | null;
 
 function HelloWorldTypescriptApp() {
-  const STUDENTS_ON_COURSE = 110;
-
   const MENU_TABLE_NAME = "Меню";
   const MEALS_TABLE_NAME = "Блюда";
   const MEAL_INGREDIENTS_TABLE_NAME = "Ингредиенты блюд";
@@ -38,7 +36,10 @@ function HelloWorldTypescriptApp() {
 
   let shoppingListPerPerson = {};
   let shoppingListArr = [];
-  for (const dayRecord of daysRecords) {
+
+  const activeDays = daysRecords.filter((el) => el.getCellValue("Активно"));
+
+  for (const dayRecord of activeDays) {
     const meals = dayRecord.getCellValue("Блюда") as ReferenceRecordType;
 
     if (meals) {
@@ -96,29 +97,34 @@ function HelloWorldTypescriptApp() {
     return Math.round(result * 10) / 10;
   }
 
-  // return JSON.stringify(daysRecords[0].getCellValue("Блюда")) 
+  // return JSON.stringify(daysRecords[0].getCellValue("Блюда"))
 
   // return(
   //   <PDFViewer>
-  //     <MenuDocument menuItem={daysRecords[0]} mealsRecords={mealsRecords}/> 
+  //     <MenuDocument menuItem={daysRecords[0]} mealsRecords={mealsRecords}/>
   //     {/* <MenuDocument menuItem="foo" mealRecords={[1,2]}/>  */}
   //   </PDFViewer>
   // )
 
-  const daysButtons = daysRecords.map(dayRecord => (
-    <li key={dayRecord.id} style={{marginTop: "10px"}}>
-      {dayRecord.name}
-      {" "}
-      <PDFDownloadLink
-        document={<MenuDocument menuItem={dayRecord} mealsRecords={mealsRecords}/>}
-        fileName={`${dayRecord.name}.pdf`}
-        key={JSON.stringify(daysRecords.map(el => el.getCellValueAsString('Блюда')))}
-        className="button"
-      >
-        Скачать PDF
-      </PDFDownloadLink>
-    </li>
-  )) 
+  const daysButtons = daysRecords
+    .filter((el) => el.getCellValue("Активно"))
+    .map((dayRecord) => (
+      <li key={dayRecord.id} style={{ marginTop: "10px" }}>
+        {dayRecord.name}{" "}
+        <PDFDownloadLink
+          document={
+            <MenuDocument menuItem={dayRecord} mealsRecords={mealsRecords} />
+          }
+          fileName={`${dayRecord.name}.pdf`}
+          key={JSON.stringify(
+            daysRecords.map((el) => el.getCellValueAsString("Блюда"))
+          )}
+          className="button"
+        >
+          Скачать PDF
+        </PDFDownloadLink>
+      </li>
+    ));
 
   return (
     <div>
@@ -131,17 +137,18 @@ function HelloWorldTypescriptApp() {
       />
       <h2>Закупить продуктов:</h2>
       <ul>
-        {Object.keys(shoppingListPerPerson).map((key: string) => (
-          <li>
-            {key}: {calculateTolalByPersonCount(shoppingListPerPerson[key])}{" "}
-            {getMeasureTotalPointByIngredientName(key)}
-          </li>
-        ))}
+        {Object.keys(shoppingListPerPerson)
+          .sort()
+          .filter((el) => el !== "Вода")
+          .map((key: string) => (
+            <li>
+              {key}: {calculateTolalByPersonCount(shoppingListPerPerson[key])}{" "}
+              {getMeasureTotalPointByIngredientName(key)}
+            </li>
+          ))}
       </ul>
       <h2> Распечатать меню</h2>
-      <ul>
-        {daysButtons}
-      </ul>
+      <ul>{daysButtons}</ul>
     </div>
   );
 }
