@@ -4,6 +4,10 @@ import Record from "@airtable/blocks/dist/types/src/models/record";
 import MenuDocument from "./menuPdf";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 import "./styles.css";
+import {
+  calculateTolalByPersonCount,
+  getMeasureTotalPointByIngredientName,
+} from "./shared";
 
 type ReferenceType = {
   id: "string";
@@ -70,41 +74,19 @@ function HelloWorldTypescriptApp() {
     }
   }
 
-  function getMeasurePointByIngredientName(ingredientName: string): string {
-    const cell = ingredientsRecords
-      .find((el: Record) => el.name === ingredientName)
-      .getCellValue("Единица измерения") as any;
-    return cell.name;
-  }
-
-  function getMeasureTotalPointByIngredientName(
-    ingredientName: string
-  ): string {
-    const valueInIngredientRecord =
-      getMeasurePointByIngredientName(ingredientName);
-    switch (valueInIngredientRecord) {
-      case "грамм":
-        return "кг";
-      case "миллилитр":
-        return "л";
-      default:
-        return "ошибка...";
-    }
-  }
-
-  function calculateTolalByPersonCount(count: number): number {
-    const result = (count / 1000) * studentsCount;
-    return Math.round(result * 10) / 10;
-  }
-
   // return JSON.stringify(daysRecords[0].getCellValue("Блюда"))
 
-  // return(
-  //   <PDFViewer>
-  //     <MenuDocument menuItem={daysRecords[0]} mealsRecords={mealsRecords}/>
-  //     {/* <MenuDocument menuItem="foo" mealRecords={[1,2]}/>  */}
-  //   </PDFViewer>
-  // )
+  //  return(
+  //    <PDFViewer>
+  //      <MenuDocument
+  //        menuItem={daysRecords[0]}
+  //        studentsCount={studentsCount}
+  //        mealsRecords={mealsRecords}
+  //        mealIngredientsRecords={mealIngredientsRecords}
+  //        ingredientsRecords={ingredientsRecords}
+  //      />
+  //    </PDFViewer>
+  //  )
 
   const daysButtons = daysRecords
     .filter((el) => el.getCellValue("Активно"))
@@ -113,12 +95,18 @@ function HelloWorldTypescriptApp() {
         {dayRecord.name}{" "}
         <PDFDownloadLink
           document={
-            <MenuDocument menuItem={dayRecord} mealsRecords={mealsRecords} />
+            <MenuDocument
+              menuItem={dayRecord}
+              mealsRecords={mealsRecords}
+              mealIngredientsRecords={mealIngredientsRecords}
+              studentsCount={studentsCount}
+              ingredientsRecords={ingredientsRecords}
+            />
           }
           fileName={`${dayRecord.name}.pdf`}
           key={JSON.stringify(
             daysRecords.map((el) => el.getCellValueAsString("Блюда"))
-          )}
+          ) + studentsCount}
           className="button"
         >
           Скачать PDF
@@ -142,8 +130,12 @@ function HelloWorldTypescriptApp() {
           .filter((el) => el !== "Вода")
           .map((key: string) => (
             <li>
-              {key}: {calculateTolalByPersonCount(shoppingListPerPerson[key])}{" "}
-              {getMeasureTotalPointByIngredientName(key)}
+              {key}:{" "}
+              {calculateTolalByPersonCount(
+                studentsCount,
+                shoppingListPerPerson[key]
+              )}{" "}
+              {getMeasureTotalPointByIngredientName(ingredientsRecords, key)}
             </li>
           ))}
       </ul>
