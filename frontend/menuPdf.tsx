@@ -6,8 +6,12 @@ import {
   Document,
   StyleSheet,
   Font,
+  View,
 } from "@react-pdf/renderer";
-import {calculateTolalByPersonCount, getMeasureTotalPointByIngredientName } from "./shared";
+import {
+  calculateTolalByPersonCount,
+  getMeasureTotalPointByIngredientName,
+} from "./shared";
 
 type ReferenceType = {
   id: "string";
@@ -29,29 +33,36 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     textAlign: "center",
     fontFamily: "Roboto",
-  },
-  author: {
-    fontSize: 12,
-    textAlign: "center",
-    marginBottom: 40,
   },
   subtitle: {
-    fontSize: 18,
-    margin: 12,
+    fontSize: 14,
+    marginTop: 16,
+    marginBottom: 0,
+    marginLeft: 8,
+    marginRight: 8,
     fontFamily: "Roboto",
   },
+  row: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  left: {
+    flex: 1,
+  },
+  right: {
+    flex: 2,
+  },
   listItem: {
-    margin: 3,
-    marginLeft: 12,
-    fontSize: 12,
+    marginLeft: 16,
+    fontSize: 9,
     fontFamily: "Roboto",
   },
   text: {
-    margin: 12,
-    fontSize: 12,
+    margin: 8,
+    fontSize: 9,
     // textAlign: 'justify',
     fontFamily: "Roboto",
   },
@@ -90,7 +101,7 @@ function MenuDocument({
   mealIngredientsRecords,
   mealsRecords,
   studentsCount,
-  ingredientsRecords
+  ingredientsRecords,
 }: MenuProps) {
   const dayNumber = menuItem.name;
   const dayMeals = menuItem.getCellValue("Блюда") as ReferenceRecordType;
@@ -137,29 +148,37 @@ function MealDocument({
     const cell = el.getCellValue("Meal") as any; // TODO: find out Type
     return cell[0].name === mealRecord.name;
   });
-  
+
   const ingredients = currentMealIngredients.map((el) => (
     <Text style={styles.listItem}>
-      {"- "}
-      {el.getCellValueAsString("Ingredient")}: 
-      {" "}
+      {"• "}
+      {el.getCellValueAsString("Ingredient")}:{" "}
       {calculateTolalByPersonCount(
         studentsCount,
-        el.getCellValue('Count') as number
+        el.getCellValue("Count") as number
       )}{" "}
-      {getMeasureTotalPointByIngredientName(ingredientsRecords, el.getCellValueAsString("Ingredient"))}
+      {getMeasureTotalPointByIngredientName(
+        ingredientsRecords,
+        el.getCellValueAsString("Ingredient")
+      )}
     </Text>
   ));
 
-
   const recipe = mealRecord.getCellValueAsString("Рецепт приготовления");
   return (
-    <>
+    <View wrap={false}>
       <Text style={styles.subtitle}>{mealRecord.name}</Text>
-      <Text style={styles.text}>{recipe}</Text>
-      <Text style={styles.text}>Ингредиенты на {studentsCount} человек:</Text>
-      {ingredients}
-    </>
+      <View style={[styles.row, {}]}>
+        <View style={styles.left}>
+          <Text style={styles.text}>
+            Ингредиенты для {studentsCount} человек:
+          </Text>
+          {ingredients}
+        </View>
+        <View style={styles.right}>
+          <Text style={styles.text}>{recipe}</Text>
+        </View>
+      </View>
+    </View>
   );
 }
-
