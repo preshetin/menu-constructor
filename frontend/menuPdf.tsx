@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   listItem: {
-    marginLeft: 16,
+    marginLeft: 8,
     fontSize: 9,
     fontFamily: "Roboto",
   },
@@ -65,25 +65,6 @@ const styles = StyleSheet.create({
     fontSize: 9,
     // textAlign: 'justify',
     fontFamily: "Roboto",
-  },
-  image: {
-    marginVertical: 15,
-    marginHorizontal: 100,
-  },
-  header: {
-    fontSize: 12,
-    marginBottom: 20,
-    textAlign: "center",
-    color: "grey",
-  },
-  pageNumber: {
-    position: "absolute",
-    fontSize: 12,
-    bottom: 30,
-    left: 0,
-    right: 0,
-    textAlign: "center",
-    color: "grey",
   },
 });
 
@@ -150,18 +131,29 @@ function MealDocument({
   });
 
   const ingredients = currentMealIngredients.map((el) => (
-    <Text style={styles.listItem}>
-      {"• "}
-      {el.getCellValueAsString("Ingredient")}:{" "}
-      {calculateTolalByPersonCount(
-        studentsCount,
-        el.getCellValue("Count") as number
-      )}{" "}
-      {getMeasureTotalPointByIngredientName(
-        ingredientsRecords,
-        el.getCellValueAsString("Ingredient")
-      )}
-    </Text>
+    <View style={styles.row}>
+      <View style={styles.right}>
+        <Text style={styles.listItem}>
+          {el.getCellValueAsString("Ingredient")}
+        </Text>
+      </View>
+      <View style={styles.left}>
+        <Text style={styles.listItem}>
+          {calculateTolalByPersonCount(
+            studentsCount,
+            el.getCellValue("Count") as number
+          )}
+        </Text>
+      </View>
+      <View style={styles.left}>
+        <Text style={styles.listItem}>
+          {getMeasureTotalPointByIngredientName(
+            ingredientsRecords,
+            el.getCellValueAsString("Ingredient")
+          )}
+        </Text>
+      </View>
+    </View>
   ));
 
   const recipe = mealRecord.getCellValueAsString("Рецепт приготовления");

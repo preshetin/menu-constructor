@@ -6,6 +6,7 @@ import {
   useBase,
   useRecords,
   Box,
+  Text,
 } from "@airtable/blocks/ui";
 import {
   calculateTolalByPersonCount,
@@ -76,27 +77,56 @@ function GroceryPage({ studentsCount }: { studentsCount: number }) {
   }
 
   return (
-    <Box>
-      <h2>Закупить продуктов:</h2>
-      <ul>
+    <Box padding={1}>
+      <Text size="large" textColor="light">
+        Закупить, чтобы хватило до конца курса
+      </Text>
+      <style>
+        {`.styled-table {
+              border-collapse: collapse;
+              margin: 25px 0;
+              font-size: 0.9em;
+          }
+
+          .styled-table th,
+          .styled-table td {
+              padding: 5px 8px;
+          }
+
+          .styled-table  tr {
+              border-bottom: 1px solid #dddddd;
+          }
+
+          .styled-table  tr:nth-of-type(even) {
+              background-color: #f3f3f3;
+          }
+
+          .styled-table  tr:last-of-type {
+              border-bottom: 2px solid #009879;
+          }
+        `}
+      </style>
+      <table className="styled-table">
         {Object.keys(shoppingListPerPerson)
           .sort()
           .filter((el) => el !== "Вода")
           .map((key: string) => (
-            <li>
-              {key}:{" "}
-              {calculateTolalByPersonCount(
-                studentsCount,
-                shoppingListPerPerson[key]
-              )}{" "}
-              {getMeasureTotalPointByIngredientName(ingredientsRecords, key)}
-            </li>
+            <tr style={{ borderBottom: "1px solid #dddddd" }}>
+              <td>{key}</td>
+              <td>
+                {calculateTolalByPersonCount(
+                  studentsCount,
+                  shoppingListPerPerson[key]
+                )}{" "}
+              </td>
+              <td>
+                {getMeasureTotalPointByIngredientName(ingredientsRecords, key)}
+              </td>
+            </tr>
           ))}
-      </ul>
+      </table>
     </Box>
   );
-
-  return <h1>Grocerices</h1>;
 }
 
 export default GroceryPage;
