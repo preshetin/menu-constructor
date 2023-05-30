@@ -52,35 +52,6 @@ function PrintPage({ studentsCount }: { studentsCount: number }) {
       </TextButton>
     ));
 
-  // const daysButtons = daysRecords
-  //   .filter((el) => el.getCellValue("Активно"))
-  //   .map((dayRecord) => (
-  //     <li key={dayRecord.id} style={{ marginTop: "10px" }}>
-  //       {dayRecord.name}{" "}
-  //       <PDFDownloadLink
-  //         document={
-  //           <MenuDocument
-  //             menuItem={dayRecord}
-  //             mealsRecords={mealsRecords}
-  //             mealIngredientsRecords={mealIngredientsRecords}
-  //             studentsCount={studentsCount}
-  //             ingredientsRecords={ingredientsRecords}
-  //           />
-  //         }
-  //         fileName={`${dayRecord.name}.pdf`}
-  //         key={
-  //           JSON.stringify(
-  //             daysRecords.map((el) => el.getCellValueAsString("Блюда"))
-  //           ) + studentsCount
-  //         }
-  //         className="button"
-  //       >
-  //         {({ blob, url, loading, error }) =>
-  //           loading ? "Loading document..." : "Распечатать"
-  //         }
-  //       </PDFDownloadLink>
-  //     </li>
-  //   ));
 
   return (
     <Box>
@@ -88,7 +59,7 @@ function PrintPage({ studentsCount }: { studentsCount: number }) {
       {/* <ul>{daysButtons}</ul> */}
       <PDFViewer width={"100%"} height={700}>
         <MenuDocument
-          menuItem={daysRecords[dayNumber]}
+          dayRecord={daysRecords[dayNumber]}
           studentsCount={studentsCount}
           mealsRecords={mealsRecords}
           mealIngredientsRecords={mealIngredientsRecords}

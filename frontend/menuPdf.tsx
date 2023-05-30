@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
 });
 
 type MenuProps = {
-  menuItem: Record;
+  dayRecord: Record;
   mealsRecords: Record[];
   mealIngredientsRecords: Record[];
   studentsCount: number;
@@ -78,14 +78,14 @@ type MenuProps = {
 
 // Create Document Component
 function MenuDocument({
-  menuItem,
+  dayRecord,
   mealIngredientsRecords,
   mealsRecords,
   studentsCount,
   ingredientsRecords,
 }: MenuProps) {
-  const dayNumber = menuItem.name;
-  const dayMeals = menuItem.getCellValue("Блюда") as ReferenceRecordType;
+  const dayNumber = dayRecord.name;
+  const dayMeals = dayRecord.getCellValue("Блюда") as ReferenceRecordType;
 
   const mDocs = dayMeals.map((meal) => {
     const mealRecord = mealsRecords.find((el) => el.id === meal.id);
@@ -99,6 +99,8 @@ function MenuDocument({
       />
     );
   });
+
+  // const ingredientsForTheDayWithPortions = 
 
   return (
     <Document>
