@@ -11,6 +11,7 @@ import {
 import {
   calculateTolalByPersonCount,
   getMeasureTotalPointByIngredientName,
+  IngredientWithPortion,
 } from "./shared";
 
 type ReferenceType = {
@@ -100,15 +101,88 @@ function MenuDocument({
     );
   });
 
-  // const ingredientsForTheDayWithPortions = 
+  let ingredientsForTheDayArr: IngredientWithPortion[] = [];
+
+  for (const meal of dayMeals) {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    const currentMealIngredients = mealIngredientsRecords.filter((el) => {
+      const cell = el.getCellValue("Meal") as any; // TODO: find out Type
+      return cell[0].name === mealRecord.name;
+    });
+    ingredientsForTheDayArr = ingredientsForTheDayArr.concat(
+      currentMealIngredients.map((el) => ({
+        ingredient: el.getCellValueAsString("Ingredient"),
+        count: calculateTolalByPersonCount(
+          studentsCount,
+          el.getCellValue("Count") as number
+        ),
+        type: getMeasureTotalPointByIngredientName(
+          ingredientsRecords,
+          el.getCellValueAsString("Ingredient")
+        ),
+      }))
+    );
+  }
+
+  let combinedIngredientsForTheDayArr: IngredientWithPortion[] = [];
+
+  for (const ingredientForTheDay of ingredientsForTheDayArr) {
+    if (
+      combinedIngredientsForTheDayArr.some(
+        (el) => el.ingredient === ingredientForTheDay.ingredient
+      )
+    ) {
+      combinedIngredientsForTheDayArr.find((el, i) => {
+        if (el.ingredient === ingredientForTheDay.ingredient) {
+          combinedIngredientsForTheDayArr[i] = {
+            ingredient: el.ingredient,
+            count: el.count + ingredientForTheDay.count,
+            type: el.type,
+          };
+        }
+      });
+    } else {
+      combinedIngredientsForTheDayArr.push(ingredientForTheDay);
+    }
+  }
 
   return (
     <Document>
       <Page size="A4" style={styles.body}>
         <Text style={styles.title}>{dayNumber} </Text>
         {mDocs}
+        <Text style={{ ...styles.title, marginTop: 20, marginBottom: 10 }}>
+          Все продукты дня (для повара){" "}
+        </Text>
+        <View wrap={false} style={{ width: 400 }}>
+          {combinedIngredientsForTheDayArr.map((el) => (
+            <IngredientItem ingredientWithPortion={el} />
+          ))}
+        </View>
       </Page>
     </Document>
+  );
+}
+
+function IngredientItem({
+  ingredientWithPortion,
+}: {
+  ingredientWithPortion: IngredientWithPortion;
+}) {
+  return (
+    <View style={styles.row}>
+      <View style={styles.right}>
+        <Text style={styles.listItem}>{ingredientWithPortion.ingredient}</Text>
+      </View>
+      <View style={styles.left}>
+        <Text style={styles.listItem}>
+          {Math.round(ingredientWithPortion.count * 10) / 10}
+        </Text>
+      </View>
+      <View style={styles.left}>
+        <Text style={styles.listItem}>{ingredientWithPortion.type}</Text>
+      </View>
+    </View>
   );
 }
 

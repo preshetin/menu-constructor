@@ -1,5 +1,14 @@
 import Record from "@airtable/blocks/dist/types/src/models/record";
 
+export type IngredientWithPortion = {
+  ingredient: string;
+  count: number;
+  type: string;
+}
+
+/*
+ *
+ */
 export function getMeasurePointByIngredientName(ingredientsRecords: Record[], ingredientName: string): string {
   const cell = ingredientsRecords
     .find((el: Record) => el.name === ingredientName)
