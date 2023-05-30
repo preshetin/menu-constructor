@@ -145,6 +145,9 @@ function MenuDocument({
       combinedIngredientsForTheDayArr.push(ingredientForTheDay);
     }
   }
+  combinedIngredientsForTheDayArr = combinedIngredientsForTheDayArr.filter(
+    (el) => el.ingredient !== "Вода"
+  );
 
   return (
     <Document>
@@ -154,7 +157,7 @@ function MenuDocument({
         <Text style={{ ...styles.title, marginTop: 20, marginBottom: 10 }}>
           Все продукты дня (для повара){" "}
         </Text>
-        <View wrap={false} style={{ width: 400 }}>
+        <View wrap={false}>
           {combinedIngredientsForTheDayArr.map((el) => (
             <IngredientItem ingredientWithPortion={el} />
           ))}
@@ -170,18 +173,24 @@ function IngredientItem({
   ingredientWithPortion: IngredientWithPortion;
 }) {
   return (
-    <View style={styles.row}>
-      <View style={styles.right}>
+    <View
+      style={{
+        ...styles.row,
+        margin: 1,
+      }}
+    >
+      <View style={{ flex: 3, borderBottom: 0.5 }}>
         <Text style={styles.listItem}>{ingredientWithPortion.ingredient}</Text>
       </View>
-      <View style={styles.left}>
+      <View style={{ flex: 1, borderBottom: 0.5 }}>
         <Text style={styles.listItem}>
           {Math.round(ingredientWithPortion.count * 10) / 10}
         </Text>
       </View>
-      <View style={styles.left}>
+      <View style={{ flex: 1, borderBottom: 0.5 }}>
         <Text style={styles.listItem}>{ingredientWithPortion.type}</Text>
       </View>
+      <View style={{ flex: 7 }}></View>
     </View>
   );
 }
