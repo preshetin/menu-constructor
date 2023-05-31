@@ -1,5 +1,10 @@
 import Record from "@airtable/blocks/dist/types/src/models/record";
 
+export const MENU_TABLE_NAME = "Меню";
+export const MEALS_TABLE_NAME = "Блюда";
+export const MEAL_INGREDIENTS_TABLE_NAME = "Ингредиенты блюд";
+export const INGREDIENTS_TABLE_NAME = "Ингредиенты";
+
 export type IngredientWithPortion = {
   ingredient: string;
   count: number;

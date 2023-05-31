@@ -11,6 +11,10 @@ import {
 import {
   calculateTolalByPersonCount,
   getMeasureTotalPointByIngredientName,
+  MENU_TABLE_NAME,
+  MEALS_TABLE_NAME,
+  MEAL_INGREDIENTS_TABLE_NAME,
+  INGREDIENTS_TABLE_NAME,
 } from "./shared";
 
 type ReferenceType = {
@@ -21,11 +25,6 @@ type ReferenceType = {
 type ReferenceRecordType = ReferenceType[] | null;
 
 function GroceryPage({ studentsCount }: { studentsCount: number }) {
-  const MENU_TABLE_NAME = "Меню";
-  const MEALS_TABLE_NAME = "Блюда";
-  const MEAL_INGREDIENTS_TABLE_NAME = "Ингредиенты блюд";
-  const INGREDIENTS_TABLE_NAME = "Ингредиенты";
-
   const base = useBase();
 
   const menuTable = base.getTableByName(MENU_TABLE_NAME);

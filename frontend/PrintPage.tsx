@@ -10,17 +10,16 @@ import {
 import {
   calculateTolalByPersonCount,
   getMeasureTotalPointByIngredientName,
+  MENU_TABLE_NAME,
+  MEALS_TABLE_NAME,
+  MEAL_INGREDIENTS_TABLE_NAME,
+  INGREDIENTS_TABLE_NAME,
 } from "./shared";
 import MenuDocument from "./menuPdf";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 
 function PrintPage({ studentsCount }: { studentsCount: number }) {
   const [dayNumber, setDayNumber] = useState(0);
-
-  const MENU_TABLE_NAME = "Меню";
-  const MEALS_TABLE_NAME = "Блюда";
-  const MEAL_INGREDIENTS_TABLE_NAME = "Ингредиенты блюд";
-  const INGREDIENTS_TABLE_NAME = "Ингредиенты";
 
   const base = useBase();
 
