@@ -1,5 +1,6 @@
 import React from "react";
 import Record from "@airtable/blocks/dist/types/src/models/record";
+import i18next from '../i18n'
 import {
   Page,
   Text,
@@ -12,6 +13,7 @@ import {
   calculateTolalByPersonCount,
   getMeasureTotalPointByIngredientName,
   IngredientWithPortion,
+  RECIPE_FIELD_NAME,
 } from "./shared";
 
 type ReferenceType = {
@@ -242,14 +244,14 @@ function MealDocument({
     </View>
   ));
 
-  const recipe = mealRecord.getCellValue("Рецепт приготовления") as string;
+  const recipe = mealRecord.getCellValue(RECIPE_FIELD_NAME) as string;
   return (
     <View wrap={false}>
       <Text style={styles.subtitle}>{mealRecord.name}</Text>
       <View style={[styles.row, {}]}>
         <View style={styles.left}>
           <Text style={styles.text}>
-            Ингредиенты для {studentsCount} человек:
+            {i18next.t('ingredientsForCountPeople', {studentsCount})}:
           </Text>
           {ingredients}
         </View>

@@ -5,6 +5,9 @@ export const MEALS_TABLE_NAME = "Блюда";
 export const MEAL_INGREDIENTS_TABLE_NAME = "Ингредиенты блюд";
 export const INGREDIENTS_TABLE_NAME = "Ингредиенты";
 
+export const RECIPE_FIELD_NAME = 'Рецепт приготовления'
+// export const RECIPE_FIELD_NAME = 'Recipe EN'
+
 export type IngredientWithPortion = {
   ingredient: string;
   count: number;
