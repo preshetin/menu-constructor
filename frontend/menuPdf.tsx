@@ -147,7 +147,8 @@ function MenuDocument({
   }
   combinedIngredientsForTheDayArr = combinedIngredientsForTheDayArr.filter(
     (el) => el.ingredient !== "Вода"
-  );
+  ).sort((a, b) => b.count - a.count);
+
 
   return (
     <Document>
@@ -241,7 +242,7 @@ function MealDocument({
     </View>
   ));
 
-  const recipe = mealRecord.getCellValueAsString("Рецепт приготовления");
+  const recipe = mealRecord.getCellValue("Рецепт приготовления") as string;
   return (
     <View wrap={false}>
       <Text style={styles.subtitle}>{mealRecord.name}</Text>
