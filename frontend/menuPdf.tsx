@@ -244,7 +244,7 @@ function MealDocument({
     </View>
   ));
 
-  const recipe = mealRecord.getCellValue(RECIPE_FIELD_NAME) as string;
+  const recipe = mealRecord.getCellValue(i18next.t('recipeFieldName')) as string;
   return (
     <View wrap={false}>
       <Text style={styles.subtitle}>{mealRecord.name}</Text>

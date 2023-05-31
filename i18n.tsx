@@ -4,8 +4,8 @@ import { initReactI18next } from "react-i18next";
 const translationEnglish = {
   ingredientsForCountPeople:
     "Ingredients for {{studentsCount}} people",
-  line2:
-    "Space exploration is a study of the cosmos. There are many aspects of the universe that we do not fully understand.",
+  recipeFieldName:
+    "Recipe EN",
   line3:
     "Astronauts visit space and report back to us on their experiences there.",
 };
@@ -13,8 +13,8 @@ const translationEnglish = {
 const translationRussian = {
   ingredientsForCountPeople:
     "Ингредиенты для {{studentsCount}} человек",
-  line2:
-    "L'exploration spatiale est une étude du cosmos. Il y a de nombreux aspects de l'univers que nous ne comprenons pas entièrement.",
+  recipeFieldName:
+    "Рецепт приготовления",
   line3:
     "Les astronautes visitent l'espace et nous rapportent leurs expériences là-bas.",
 };
