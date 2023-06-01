@@ -1,9 +1,6 @@
 import React from "react";
 import {
-  Link,
-  TextButton,
-  initializeBlock,
-  useBase,
+ useBase,
   useRecords,
   Box,
   Text,
@@ -51,17 +48,15 @@ function GroceryPage({ studentsCount }: { studentsCount: number }) {
       for (const meal of meals) {
         shoppingListArr.push(meal.name);
 
-        // shoppingListArr.push(JSON.stringify(mealIngredientsRecords[0].getCellValue("Meal")))
-
-        const currentMealIngredients = mealIngredientsRecords.filter((el) => {
+        const mealIngredients = mealIngredientsRecords.filter((el) => {
           const cell = el.getCellValue("Meal") as any; // TODO: find out Type
           return cell[0].name === meal.name;
         });
 
-        for (const currentMealIngredient of currentMealIngredients) {
+        for (const mealIngredient of mealIngredients) {
           const ingredient =
-            currentMealIngredient.getCellValue("Ingredient")[0].name;
-          const count = currentMealIngredient.getCellValue("Count") as number;
+            mealIngredient.getCellValue("Ingredient")[0].name;
+          const count = mealIngredient.getCellValue("Count") as number;
           shoppingListArr.push(`${ingredient}: ${count}`);
           if (shoppingListPerPerson.hasOwnProperty(ingredient)) {
             // add value to existing

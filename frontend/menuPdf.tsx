@@ -1,6 +1,6 @@
 import React from "react";
 import Record from "@airtable/blocks/dist/types/src/models/record";
-import i18next from '../i18n'
+import i18next from './i18n'
 import {
   Page,
   Text,
