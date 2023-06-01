@@ -38,7 +38,22 @@ function GroceryPage({ studentsCount }: { studentsCount: number }) {
   const activeDays = daysRecords.filter((el) => el.getCellValue("Активно"));
 
   for (const dayRecord of activeDays) {
-    const meals = dayRecord.getCellValue("Блюда") as ReferenceRecordType;
+    // const meals = dayRecord.getCellValue("Блюда") as ReferenceRecordType;
+
+    const breakfastMeals = dayRecord.getCellValue("Завтрак")
+      ? (dayRecord.getCellValue("Завтрак") as ReferenceType[])
+      : [];
+    const lunchMeals = dayRecord.getCellValue("Обед")
+      ? (dayRecord.getCellValue("Обед") as ReferenceType[])
+      : [];
+    const teaMeals = dayRecord.getCellValue("Полдник")
+      ? (dayRecord.getCellValue("Полдник") as ReferenceType[])
+      : [];
+
+    let meals: ReferenceType[] = [];
+    meals = meals.concat(breakfastMeals);
+    meals = meals.concat(lunchMeals);
+    meals = meals.concat(teaMeals);
 
     if (meals) {
       for (const meal of meals) {

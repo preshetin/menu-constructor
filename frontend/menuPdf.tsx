@@ -1,6 +1,6 @@
 import React from "react";
 import Record from "@airtable/blocks/dist/types/src/models/record";
-import i18next from './i18n'
+import i18next from "./i18n";
 import {
   Page,
   Text,
@@ -87,10 +87,48 @@ function MenuDocument({
   studentsCount,
   ingredientsRecords,
 }: MenuProps) {
-  const dayNumber = dayRecord.name;
-  const dayMeals = dayRecord.getCellValue("Блюда") as ReferenceRecordType;
+  const breakfastMeals = dayRecord.getCellValue("Завтрак")
+    ? (dayRecord.getCellValue("Завтрак") as ReferenceType[])
+    : [];
+  const lunchMeals = dayRecord.getCellValue("Обед")
+    ? (dayRecord.getCellValue("Обед") as ReferenceType[])
+    : [];
+  const teaMeals = dayRecord.getCellValue("Полдник")
+    ? (dayRecord.getCellValue("Полдник") as ReferenceType[])
+    : [];
 
-  const mDocs = dayMeals.map((meal) => {
+  let dayMeals: ReferenceType[] = [];
+  dayMeals = dayMeals.concat(breakfastMeals);
+  dayMeals = dayMeals.concat(lunchMeals);
+  dayMeals = dayMeals.concat(teaMeals);
+
+  const breakfastMealDocuments = breakfastMeals.map((meal) => {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    return (
+      <MealDocument
+        key={meal.id}
+        mealIngredientsRecords={mealIngredientsRecords}
+        mealRecord={mealRecord}
+        studentsCount={studentsCount}
+        ingredientsRecords={ingredientsRecords}
+      />
+    );
+  });
+
+  const lunchMealDocuments = lunchMeals.map((meal) => {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    return (
+      <MealDocument
+        key={meal.id}
+        mealIngredientsRecords={mealIngredientsRecords}
+        mealRecord={mealRecord}
+        studentsCount={studentsCount}
+        ingredientsRecords={ingredientsRecords}
+      />
+    );
+  });
+
+  const teaMealDocuments = teaMeals.map((meal) => {
     const mealRecord = mealsRecords.find((el) => el.id === meal.id);
     return (
       <MealDocument
@@ -147,16 +185,59 @@ function MenuDocument({
       combinedIngredientsForTheDayArr.push(ingredientForTheDay);
     }
   }
-  combinedIngredientsForTheDayArr = combinedIngredientsForTheDayArr.filter(
-    (el) => el.ingredient !== "Вода"
-  ).sort((a, b) => b.count - a.count);
-
+  combinedIngredientsForTheDayArr = combinedIngredientsForTheDayArr
+    .filter((el) => el.ingredient !== "Вода")
+    .sort((a, b) => b.count - a.count);
 
   return (
     <Document>
       <Page size="A4" style={styles.body}>
-        <Text style={styles.title}>{dayNumber} </Text>
-        {mDocs}
+        <Text style={{ ...styles.title, marginBottom: 10 }}>{dayRecord.name} </Text>
+        {breakfastMealDocuments.length && (
+          <View style={{ marginBottom: 15 }}>
+            <Text
+              style={{
+                ...styles.title,
+                border: 1,
+                borderBottom: 0,
+                backgroundColor: "lightgray",
+              }}
+            >
+              Завтрак
+            </Text>
+            <View style={{ border: 1 }}>{breakfastMealDocuments}</View>
+          </View>
+        )}
+        {lunchMealDocuments.length && (
+          <View style={{ marginBottom: 15 }}>
+            <Text
+              style={{
+                ...styles.title,
+                border: 1,
+                borderBottom: 0,
+                backgroundColor: "lightgray",
+              }}
+            >
+              Обед
+            </Text>
+            <View style={{ border: 1 }}>{lunchMealDocuments}</View>
+          </View>
+        )}
+        {teaMealDocuments.length && (
+          <View style={{ marginBottom: 15 }}>
+            <Text
+              style={{
+                ...styles.title,
+                border: 1,
+                borderBottom: 0,
+                backgroundColor: "lightgray",
+              }}
+            >
+              Полдник
+            </Text>
+            <View style={{ border: 1 }}>{teaMealDocuments}</View>
+          </View>
+        )}
         <Text style={{ ...styles.title, marginTop: 20, marginBottom: 10 }}>
           Все продукты дня (для повара){" "}
         </Text>
@@ -244,14 +325,16 @@ function MealDocument({
     </View>
   ));
 
-  const recipe = mealRecord.getCellValue(i18next.t('recipeFieldName')) as string;
+  const recipe = mealRecord.getCellValue(
+    i18next.t("recipeFieldName")
+  ) as string;
   return (
     <View wrap={false}>
-      <Text style={styles.subtitle}>{mealRecord.getCellValueAsString("Прием пищи")}: {mealRecord.name}</Text>
+      <Text style={styles.subtitle}>{mealRecord.name}</Text>
       <View style={[styles.row, {}]}>
         <View style={styles.left}>
           <Text style={styles.text}>
-            {i18next.t('ingredientsForCountPeople', {studentsCount})}:
+            {i18next.t("ingredientsForCountPeople", { studentsCount })}:
           </Text>
           {ingredients}
         </View>
