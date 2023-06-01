@@ -37,7 +37,11 @@ export function getMeasureTotalPointByIngredientName(ingredientsRecords: Record[
   }
 }
 
-export function calculateTolalByPersonCount(studentsCount: number, count: number): number {
-  const result = (count / 1000) * studentsCount;
+export function calculateTolalByPersonCount(studentsCount: number,  count: number, leftoverCount?: number): number {
+  let result = (count / 1000) * studentsCount;
+  if (leftoverCount) {
+    result -= leftoverCount;
+  }
+
   return Math.round(result * 10) / 10;
 }

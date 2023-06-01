@@ -1,10 +1,5 @@
 import React from "react";
-import {
- useBase,
-  useRecords,
-  Box,
-  Text,
-} from "@airtable/blocks/ui";
+import { useBase, useRecords, Box, Text } from "@airtable/blocks/ui";
 import {
   calculateTolalByPersonCount,
   getMeasureTotalPointByIngredientName,
@@ -36,7 +31,8 @@ function GroceryPage({ studentsCount }: { studentsCount: number }) {
   const ingredientsTable = base.getTableByName(INGREDIENTS_TABLE_NAME);
   const ingredientsRecords = useRecords(ingredientsTable);
 
-  let shoppingListPerPerson = {};
+  let shoppingListPerPerson: { [ingredieng: string]: number } = {};
+  let leftoversObj: { [ingredient: string]: number } = {};
   let shoppingListArr = [];
 
   const activeDays = daysRecords.filter((el) => el.getCellValue("Активно"));
@@ -54,10 +50,17 @@ function GroceryPage({ studentsCount }: { studentsCount: number }) {
         });
 
         for (const mealIngredient of mealIngredients) {
+          const ingredient = mealIngredient.getCellValue("Ingredient")[0];
 
-          const ingredient = mealIngredient.getCellValue("Ingredient")[0]
+          const ingredientRecord = ingredientsRecords.find(
+            (el) => el.id === ingredient.id
+          );
 
           const ingredientName = ingredient.name;
+          const leftoverCount = ingredientRecord.getCellValue(
+            "Остатки"
+          ) as number;
+          leftoversObj[ingredientName] = leftoverCount;
 
           const count = mealIngredient.getCellValue("Count") as number;
           shoppingListArr.push(`${ingredientName}: ${count}`);
@@ -107,20 +110,30 @@ function GroceryPage({ studentsCount }: { studentsCount: number }) {
         {Object.keys(shoppingListPerPerson)
           .sort()
           .filter((el) => el !== "Вода")
-          .map((key: string) => (
-            <tr style={{ borderBottom: "1px solid #dddddd" }}>
-              <td>{key}</td>
-              <td>
-                {calculateTolalByPersonCount(
-                  studentsCount,
-                  shoppingListPerPerson[key]
-                )}{" "}
-              </td>
-              <td>
-                {getMeasureTotalPointByIngredientName(ingredientsRecords, key)}
-              </td>
-            </tr>
-          ))}
+          .map((key: string) => {
+            const total = calculateTolalByPersonCount(
+              studentsCount,
+              shoppingListPerPerson[key],
+              leftoversObj[key]
+            );
+
+            if (total <= 0) {
+              return null;
+            }
+
+            return (
+              <tr style={{ borderBottom: "1px solid #dddddd" }}>
+                <td>{key}</td>
+                <td>{total}</td>
+                <td>
+                  {getMeasureTotalPointByIngredientName(
+                    ingredientsRecords,
+                    key
+                  )}
+                </td>
+              </tr>
+            );
+          })}
       </table>
     </Box>
   );
