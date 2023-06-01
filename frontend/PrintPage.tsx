@@ -58,6 +58,7 @@ function PrintPage({ studentsCount }: { studentsCount: number }) {
       {/* <ul>{daysButtons}</ul> */}
       <PDFViewer width={"100%"} height={700}>
         <MenuDocument
+          key={dayNumber}
           dayRecord={daysRecords[dayNumber]}
           studentsCount={studentsCount}
           mealsRecords={mealsRecords}

@@ -31,14 +31,6 @@ function MealPlannerApp() {
       </Box>
 
       <TextButton
-        onClick={() => setPage("validation")}
-        disabled={page === "validation"}
-        style={{ margin: 10 }}
-        icon="checklist"
-      >
-        Проверка
-      </TextButton>
-      <TextButton
         onClick={() => setPage("print")}
         disabled={page === "print"}
         style={{ margin: 10 }}
