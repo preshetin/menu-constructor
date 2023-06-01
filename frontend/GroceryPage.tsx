@@ -54,16 +54,19 @@ function GroceryPage({ studentsCount }: { studentsCount: number }) {
         });
 
         for (const mealIngredient of mealIngredients) {
-          const ingredient =
-            mealIngredient.getCellValue("Ingredient")[0].name;
+
+          const ingredient = mealIngredient.getCellValue("Ingredient")[0]
+
+          const ingredientName = ingredient.name;
+
           const count = mealIngredient.getCellValue("Count") as number;
-          shoppingListArr.push(`${ingredient}: ${count}`);
-          if (shoppingListPerPerson.hasOwnProperty(ingredient)) {
+          shoppingListArr.push(`${ingredientName}: ${count}`);
+          if (shoppingListPerPerson.hasOwnProperty(ingredientName)) {
             // add value to existing
-            shoppingListPerPerson[ingredient] += count;
+            shoppingListPerPerson[ingredientName] += count;
           } else {
             //create property with initial value
-            shoppingListPerPerson[ingredient] = count;
+            shoppingListPerPerson[ingredientName] = count;
           }
         }
       }
