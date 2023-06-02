@@ -126,11 +126,12 @@ function GroceryPage({ studentsCount }: { studentsCount: number }) {
           .sort()
           .filter((el) => el !== "Вода")
           .map((key: string) => {
-            const total = calculateTolalByPersonCount(
+            const total = calculateTolalByPersonCount({
               studentsCount,
-              shoppingListPerPerson[key],
-              leftoversObj[key]
-            );
+              count: shoppingListPerPerson[key],
+              measurePoint: getMeasureTotalPointByIngredientName( ingredientsRecords, key),
+              leftoverCount: leftoversObj[key]
+            });
 
             if (total <= 0) {
               return null;

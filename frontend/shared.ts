@@ -32,13 +32,32 @@ export function getMeasureTotalPointByIngredientName(ingredientsRecords: Record[
       return "кг";
     case "миллилитр":
       return "л";
+
+    // static 
+    case "штука":
+      return "шт";
+
     default:
       return "ошибка...";
   }
 }
 
-export function calculateTolalByPersonCount(studentsCount: number,  count: number, leftoverCount?: number): number {
-  let result = (count / 1000) * studentsCount;
+export function calculateTolalByPersonCount({
+  studentsCount,
+  count,
+  measurePoint,
+  leftoverCount,
+}: {
+  studentsCount: number;
+  count: number;
+  measurePoint: string;
+  leftoverCount?: number;
+}): number {
+  let result = count;
+
+  if (measurePoint === "кг" || measurePoint === "л") {
+    result = (count / 1000) * studentsCount;
+  }
   if (leftoverCount) {
     result -= leftoverCount;
   }

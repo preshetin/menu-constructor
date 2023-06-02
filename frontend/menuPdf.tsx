@@ -152,10 +152,11 @@ function MenuDocument({
     ingredientsForTheDayArr = ingredientsForTheDayArr.concat(
       currentMealIngredients.map((el) => ({
         ingredient: el.getCellValueAsString("Ingredient"),
-        count: calculateTolalByPersonCount(
+        count: calculateTolalByPersonCount({
           studentsCount,
-          el.getCellValue("Count") as number
-        ),
+          count: el.getCellValue("Count") as number,
+          measurePoint: getMeasureTotalPointByIngredientName( ingredientsRecords, el.getCellValueAsString("Ingredient"))
+        }),
         type: getMeasureTotalPointByIngredientName(
           ingredientsRecords,
           el.getCellValueAsString("Ingredient")
@@ -308,9 +309,11 @@ function MealDocument({
       </View>
       <View style={styles.left}>
         <Text style={styles.listItem}>
-          {calculateTolalByPersonCount(
+          {calculateTolalByPersonCount({
             studentsCount,
-            el.getCellValue("Count") as number
+            count: el.getCellValue("Count") as number,
+            measurePoint: getMeasureTotalPointByIngredientName( ingredientsRecords, el.getCellValueAsString("Ingredient"))
+          }
           )}
         </Text>
       </View>
