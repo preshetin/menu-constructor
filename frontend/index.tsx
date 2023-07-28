@@ -13,7 +13,7 @@ import PrintPage from "./PrintPage";
 
 function MealPlannerApp() {
   const [studentsCount, setStudentsCount] = useState(60);
-  const [page, setPage] = useState("print"); // or 'print' or 'grocery'
+  const [page, setPage] = useState("meals"); // or 'print' or 'grocery'
 
   // return JSON.stringify(daysRecords[0].getCellValue("Блюда"))
 
@@ -31,12 +31,12 @@ function MealPlannerApp() {
       </Box>
 
       <TextButton
-        onClick={() => setPage("print")}
-        disabled={page === "print"}
+        onClick={() => setPage("meals")}
+        disabled={page === "meals"}
         style={{ margin: 10 }}
         icon="print"
       >
-        Печать
+        Меню для повара
       </TextButton>
       <TextButton
         onClick={() => setPage("grocery")}
@@ -49,7 +49,7 @@ function MealPlannerApp() {
 
       {page === "grocery" && <GroceryPage studentsCount={studentsCount} />}
 
-      {page === "print" && <PrintPage studentsCount={studentsCount} />}
+      {page === "meals" && <PrintPage studentsCount={studentsCount} />}
     </Box>
   );
 }
