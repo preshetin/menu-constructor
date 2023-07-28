@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   text: {
     margin: 8,
-    fontSize: 9,
+    fontSize: 8,
     // textAlign: 'justify',
     fontFamily: "Roboto",
   },
@@ -102,7 +102,10 @@ function MenuDocument({
   dayMeals = dayMeals.concat(lunchMeals);
   dayMeals = dayMeals.concat(teaMeals);
 
-  const breakfastMealDocuments = breakfastMeals.map((meal) => {
+  const breakfastCookMealDocuments = breakfastMeals.filter(meal => {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    return mealRecord.getCellValueAsString('Тип блюда') !== 'Раздача'
+  }).map((meal) => {
     const mealRecord = mealsRecords.find((el) => el.id === meal.id);
     return (
       <MealDocument
@@ -115,7 +118,10 @@ function MenuDocument({
     );
   });
 
-  const lunchMealDocuments = lunchMeals.map((meal) => {
+  const breakfastDistributionMealDocuments = breakfastMeals.filter(meal => {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    return mealRecord.getCellValueAsString('Тип блюда') === 'Раздача'
+  }).map((meal) => {
     const mealRecord = mealsRecords.find((el) => el.id === meal.id);
     return (
       <MealDocument
@@ -128,7 +134,10 @@ function MenuDocument({
     );
   });
 
-  const teaMealDocuments = teaMeals.map((meal) => {
+  const lunchCookMealDocuments = lunchMeals.filter(meal => {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    return mealRecord.getCellValueAsString('Тип блюда') !== 'Раздача'
+  }).map((meal) => {
     const mealRecord = mealsRecords.find((el) => el.id === meal.id);
     return (
       <MealDocument
@@ -140,6 +149,57 @@ function MenuDocument({
       />
     );
   });
+
+  const lunchDistributionMealDocuments = lunchMeals.filter(meal => {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    return mealRecord.getCellValueAsString('Тип блюда') === 'Раздача'
+  }).map((meal) => {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    return (
+      <MealDocument
+        key={meal.id}
+        mealIngredientsRecords={mealIngredientsRecords}
+        mealRecord={mealRecord}
+        studentsCount={studentsCount}
+        ingredientsRecords={ingredientsRecords}
+      />
+    );
+  });
+
+
+  const teaCookMealDocuments = teaMeals.filter(meal => {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    return mealRecord.getCellValueAsString('Тип блюда') !== 'Раздача'
+  }).map((meal) => {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    return (
+      <MealDocument
+        key={meal.id}
+        mealIngredientsRecords={mealIngredientsRecords}
+        mealRecord={mealRecord}
+        studentsCount={studentsCount}
+        ingredientsRecords={ingredientsRecords}
+      />
+    );
+  });
+
+
+  const teaDistributionMealDocuments = teaMeals.filter(meal => {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    return mealRecord.getCellValueAsString('Тип блюда') === 'Раздача'
+  }).map((meal) => {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    return (
+      <MealDocument
+        key={meal.id}
+        mealIngredientsRecords={mealIngredientsRecords}
+        mealRecord={mealRecord}
+        studentsCount={studentsCount}
+        ingredientsRecords={ingredientsRecords}
+      />
+    );
+  });
+
 
   let ingredientsForTheDayArr: IngredientWithPortion[] = [];
 
@@ -193,8 +253,8 @@ function MenuDocument({
   return (
     <Document>
       <Page size="A4" style={styles.body}>
-        <Text style={{ ...styles.title, marginBottom: 10 }}>{dayRecord.name} </Text>
-        {breakfastMealDocuments.length && (
+        <Text style={{ ...styles.title, marginBottom: 10 }}>{dayRecord.name} — Раздача </Text>
+        {breakfastDistributionMealDocuments.length && (
           <View style={{ marginBottom: 15 }}>
             <Text
               style={{
@@ -206,10 +266,10 @@ function MenuDocument({
             >
               Завтрак
             </Text>
-            <View style={{ border: 1 }}>{breakfastMealDocuments}</View>
+            <View style={{ border: 1 }}>{breakfastDistributionMealDocuments}</View>
           </View>
         )}
-        {lunchMealDocuments.length && (
+        {lunchDistributionMealDocuments.length && (
           <View style={{ marginBottom: 15 }}>
             <Text
               style={{
@@ -221,10 +281,10 @@ function MenuDocument({
             >
               Обед
             </Text>
-            <View style={{ border: 1 }}>{lunchMealDocuments}</View>
+            <View style={{ border: 1 }}>{lunchDistributionMealDocuments}</View>
           </View>
         )}
-        {teaMealDocuments.length && (
+        {teaDistributionMealDocuments.length && (
           <View style={{ marginBottom: 15 }}>
             <Text
               style={{
@@ -236,11 +296,59 @@ function MenuDocument({
             >
               Полдник
             </Text>
-            <View style={{ border: 1 }}>{teaMealDocuments}</View>
+            <View style={{ border: 1 }}>{teaDistributionMealDocuments}</View>
+          </View>
+        )}
+      </Page>
+      <Page size="A4" style={styles.body}>
+        <Text style={{ ...styles.title, marginBottom: 10 }}>{dayRecord.name} — Меню для повара </Text>
+        {breakfastCookMealDocuments.length && (
+          <View style={{ marginBottom: 15 }}>
+            <Text
+              style={{
+                ...styles.title,
+                border: 1,
+                borderBottom: 0,
+                backgroundColor: "lightgray",
+              }}
+            >
+              Завтрак
+            </Text>
+            <View style={{ border: 1 }}>{breakfastCookMealDocuments}</View>
+          </View>
+        )}
+        {lunchCookMealDocuments.length && (
+          <View style={{ marginBottom: 15 }}>
+            <Text
+              style={{
+                ...styles.title,
+                border: 1,
+                borderBottom: 0,
+                backgroundColor: "lightgray",
+              }}
+            >
+              Обед
+            </Text>
+            <View style={{ border: 1 }}>{lunchCookMealDocuments}</View>
+          </View>
+        )}
+        {teaCookMealDocuments.length && (
+          <View style={{ marginBottom: 15 }}>
+            <Text
+              style={{
+                ...styles.title,
+                border: 1,
+                borderBottom: 0,
+                backgroundColor: "lightgray",
+              }}
+            >
+              Полдник
+            </Text>
+            <View style={{ border: 1 }}>{teaCookMealDocuments}</View>
           </View>
         )}
         <Text style={{ ...styles.title, marginTop: 20, marginBottom: 10 }}>
-          Все продукты дня (для повара){" "}
+          Все продукты дня {" "}
         </Text>
         <View wrap={false}>
           {combinedIngredientsForTheDayArr.map((el) => (
