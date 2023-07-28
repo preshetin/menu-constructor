@@ -18,7 +18,7 @@ import {
 import MenuDocument from "./menuPdf";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 
-function PrintPage({ studentsCount }: { studentsCount: number }) {
+function MealsPage({ studentsCount }: { studentsCount: number }) {
   const [dayNumber, setDayNumber] = useState(0);
 
   const base = useBase();
@@ -70,4 +70,4 @@ function PrintPage({ studentsCount }: { studentsCount: number }) {
   );
 }
 
-export default PrintPage;
+export default MealsPage;

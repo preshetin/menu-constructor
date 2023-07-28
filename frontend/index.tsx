@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import "./styles.css";
 import GroceryPage from "./GroceryPage";
-import PrintPage from "./PrintPage";
+import MealsPage from "./MealsPage";
 
 function MealPlannerApp() {
   const [studentsCount, setStudentsCount] = useState(60);
@@ -49,7 +49,7 @@ function MealPlannerApp() {
 
       {page === "grocery" && <GroceryPage studentsCount={studentsCount} />}
 
-      {page === "meals" && <PrintPage studentsCount={studentsCount} />}
+      {page === "meals" && <MealsPage studentsCount={studentsCount} />}
     </Box>
   );
 }
