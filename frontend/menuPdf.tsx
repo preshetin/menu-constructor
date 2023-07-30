@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   listItem: {
     marginLeft: 8,
-    fontSize: 9,
+    fontSize: 8,
     fontFamily: "Roboto",
   },
   text: {
@@ -277,7 +277,7 @@ function MenuDocument({
             >
               Завтрак
             </Text>
-            <View style={{ border: 1 }}>{breakfastDistributionMealDocuments}</View>
+            <View style={{ border: 1, padding: 5 }}>{breakfastDistributionMealDocuments}</View>
           </View>
         )}
         {lunchDistributionMealDocuments.length && (
@@ -292,7 +292,7 @@ function MenuDocument({
             >
               Обед
             </Text>
-            <View style={{ border: 1 }}>{lunchDistributionMealDocuments}</View>
+            <View style={{ border: 1, padding: 5 }}>{lunchDistributionMealDocuments}</View>
           </View>
         )}
         {teaDistributionMealDocuments.length && (
@@ -307,7 +307,7 @@ function MenuDocument({
             >
               Полдник
             </Text>
-            <View style={{ border: 1 }}>{teaDistributionMealDocuments}</View>
+            <View style={{ border: 1, padding: 5 }}>{teaDistributionMealDocuments}</View>
           </View>
         )}
       </Page>
@@ -325,7 +325,7 @@ function MenuDocument({
             >
               Завтрак
             </Text>
-            <View style={{ border: 1 }}>{breakfastCookMealDocuments}</View>
+            <View style={{ border: 1, padding: 5 }}>{breakfastCookMealDocuments}</View>
           </View>
         )}
         {lunchCookMealDocuments.length && (
@@ -340,7 +340,7 @@ function MenuDocument({
             >
               Обед
             </Text>
-            <View style={{ border: 1 }}>{lunchCookMealDocuments}</View>
+            <View style={{ border: 1, padding: 5 }}>{lunchCookMealDocuments}</View>
           </View>
         )}
         {teaCookMealDocuments.length && (
@@ -355,7 +355,7 @@ function MenuDocument({
             >
               Полдник
             </Text>
-            <View style={{ border: 1 }}>{teaCookMealDocuments}</View>
+            <View style={{ border: 1, padding: 5 }}>{teaCookMealDocuments}</View>
           </View>
         )}
         <Text style={{ ...styles.title, marginTop: 20, marginBottom: 10 }}>
