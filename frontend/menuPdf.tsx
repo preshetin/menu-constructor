@@ -451,6 +451,7 @@ function MealDocument({
     i18next.t("recipeFieldName")
   ) as string;
   const converter = new showdown.Converter();
+  converter.setOption('simpleLineBreaks', true);
   const recipeHtml = converter.makeHtml(recipe);
   return (
     <View wrap={false}>
@@ -463,7 +464,7 @@ function MealDocument({
           {ingredients}
         </View>
         <View style={styles.right}>
-          <Html style={{ fontSize: 10 }}>{recipeHtml}</Html>
+          <Html style={{ fontSize: 9 }}>{recipeHtml}</Html>
         </View>
       </View>
     </View>
