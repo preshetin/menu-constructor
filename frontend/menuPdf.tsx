@@ -1,4 +1,6 @@
 import React from "react";
+import showdown from "showdown";
+import Html from "react-pdf-html";
 import Record from "@airtable/blocks/dist/types/src/models/record";
 import i18next from "./i18n";
 import {
@@ -25,7 +27,16 @@ type ReferenceRecordType = ReferenceType[] | null;
 
 Font.register({
   family: "Roboto",
-  src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf",
+  fonts: [
+    {
+      src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf",
+      fontWeight: "normal",
+    },
+    {
+      src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-bold-webfont.ttf",
+      fontWeight: "bold",
+    },
+  ],
 });
 
 const styles = StyleSheet.create({
@@ -439,6 +450,8 @@ function MealDocument({
   const recipe = mealRecord.getCellValue(
     i18next.t("recipeFieldName")
   ) as string;
+  const converter = new showdown.Converter();
+  const recipeHtml = converter.makeHtml(recipe);
   return (
     <View wrap={false}>
       <Text style={styles.subtitle}>{mealRecord.name}</Text>
@@ -450,7 +463,7 @@ function MealDocument({
           {ingredients}
         </View>
         <View style={styles.right}>
-          <Text style={styles.text}>{recipe}</Text>
+          <Html style={{ fontSize: 10 }}>{recipeHtml}</Html>
         </View>
       </View>
     </View>
