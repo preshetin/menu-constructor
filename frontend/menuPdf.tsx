@@ -464,7 +464,7 @@ function MealDocument({
           {ingredients}
         </View>
         <View style={styles.right}>
-          <Html style={{ fontSize: 9 }}>{recipeHtml}</Html>
+          <Html style={{ fontSize: 8 }}>{recipeHtml}</Html>
         </View>
       </View>
     </View>
