@@ -125,7 +125,6 @@ function MenuDocument({
         key={meal.id}
         mealIngredientsRecords={mealIngredientsRecords}
         mealRecord={mealRecord}
-        studentsCount={studentsCount}
         ingredientsRecords={ingredientsRecords}
       />
     );
@@ -141,7 +140,6 @@ function MenuDocument({
         key={meal.id}
         mealIngredientsRecords={mealIngredientsRecords}
         mealRecord={mealRecord}
-        studentsCount={studentsCount}
         ingredientsRecords={ingredientsRecords}
       />
     );
@@ -157,7 +155,6 @@ function MenuDocument({
         key={meal.id}
         mealIngredientsRecords={mealIngredientsRecords}
         mealRecord={mealRecord}
-        studentsCount={studentsCount}
         ingredientsRecords={ingredientsRecords}
       />
     );
@@ -173,7 +170,6 @@ function MenuDocument({
         key={meal.id}
         mealIngredientsRecords={mealIngredientsRecords}
         mealRecord={mealRecord}
-        studentsCount={studentsCount}
         ingredientsRecords={ingredientsRecords}
       />
     );
@@ -190,7 +186,6 @@ function MenuDocument({
         key={meal.id}
         mealIngredientsRecords={mealIngredientsRecords}
         mealRecord={mealRecord}
-        studentsCount={studentsCount}
         ingredientsRecords={ingredientsRecords}
       />
     );
@@ -207,7 +202,6 @@ function MenuDocument({
         key={meal.id}
         mealIngredientsRecords={mealIngredientsRecords}
         mealRecord={mealRecord}
-        studentsCount={studentsCount}
         ingredientsRecords={ingredientsRecords}
       />
     );
@@ -406,20 +400,20 @@ export default MenuDocument;
 type MealDocumentProps = {
   mealRecord: Record;
   mealIngredientsRecords: Record[];
-  studentsCount: number;
   ingredientsRecords: Record[];
 };
 
 function MealDocument({
   mealRecord,
   mealIngredientsRecords,
-  studentsCount,
   ingredientsRecords,
 }: MealDocumentProps): JSX.Element {
   const currentMealIngredients = mealIngredientsRecords.filter((el) => {
     const cell = el.getCellValue("Meal") as any; // TODO: find out Type
     return cell[0].name === mealRecord.name;
   });
+
+  const studentsCount = globalConfig.get('studentsCount') as unknown as number;
 
   const ingredients = currentMealIngredients.map((el) => (
     <View style={styles.row}>
