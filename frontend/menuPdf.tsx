@@ -13,7 +13,9 @@ import {
 } from "@react-pdf/renderer";
 import {
   calculateTolalByPersonCount,
+  getIngredientsForMealsList,
   getMeasureTotalPointByIngredientName,
+  getPersonCountByMeal,
   IngredientWithPortion,
   RECIPE_FIELD_NAME,
 } from "./shared";
@@ -99,6 +101,7 @@ function MenuDocument({
 }: MenuProps) {
 
   const studentsCount = globalConfig.get('studentsCount') as unknown as number;
+  const newStudentsCount = globalConfig.get('newStudentsCount') as unknown as number;
 
   const breakfastMeals = dayRecord.getCellValue("Завтрак")
     ? (dayRecord.getCellValue("Завтрак") as ReferenceType[])
@@ -207,55 +210,7 @@ function MenuDocument({
     );
   });
 
-
-  let ingredientsForTheDayArr: IngredientWithPortion[] = [];
-
-  for (const meal of dayMeals) {
-    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
-    const currentMealIngredients = mealIngredientsRecords.filter((el) => {
-      const cell = el.getCellValue("Meal") as any; // TODO: find out Type
-      return cell[0].name === mealRecord.name;
-    });
-    ingredientsForTheDayArr = ingredientsForTheDayArr.concat(
-      currentMealIngredients.map((el) => ({
-        ingredient: el.getCellValueAsString("Ingredient"),
-        count: calculateTolalByPersonCount({
-          studentsCount,
-          count: el.getCellValue("Count") as number,
-          measurePoint: getMeasureTotalPointByIngredientName( ingredientsRecords, el.getCellValueAsString("Ingredient"))
-        }),
-        type: getMeasureTotalPointByIngredientName(
-          ingredientsRecords,
-          el.getCellValueAsString("Ingredient")
-        ),
-      }))
-    );
-  }
-
-  let combinedIngredientsForTheDayArr: IngredientWithPortion[] = [];
-
-  for (const ingredientForTheDay of ingredientsForTheDayArr) {
-    if (
-      combinedIngredientsForTheDayArr.some(
-        (el) => el.ingredient === ingredientForTheDay.ingredient
-      )
-    ) {
-      combinedIngredientsForTheDayArr.find((el, i) => {
-        if (el.ingredient === ingredientForTheDay.ingredient) {
-          combinedIngredientsForTheDayArr[i] = {
-            ingredient: el.ingredient,
-            count: el.count + ingredientForTheDay.count,
-            type: el.type,
-          };
-        }
-      });
-    } else {
-      combinedIngredientsForTheDayArr.push(ingredientForTheDay);
-    }
-  }
-  combinedIngredientsForTheDayArr = combinedIngredientsForTheDayArr
-    .filter((el) => el.ingredient !== "Вода")
-    .sort((a, b) => b.count - a.count);
+  const ingredientsForTheDayArr = getIngredientsForMealsList(dayMeals, {mealsRecords, mealIngredientsRecords, ingredientsRecords, studentsCount, newStudentsCount});
 
   return (
     <Document>
@@ -358,7 +313,7 @@ function MenuDocument({
           Все продукты дня {" "}
         </Text>
         <View wrap={false}>
-          {combinedIngredientsForTheDayArr.map((el) => (
+          {ingredientsForTheDayArr.map((el) => (
             <IngredientItem ingredientWithPortion={el} />
           ))}
         </View>
@@ -414,6 +369,9 @@ function MealDocument({
   });
 
   const studentsCount = globalConfig.get('studentsCount') as unknown as number;
+  const newStudentsCount = globalConfig.get('newStudentsCount') as unknown as number;
+
+  const personCount = getPersonCountByMeal(mealRecord, {studentsCount, newStudentsCount});
 
   const ingredients = currentMealIngredients.map((el) => (
     <View style={styles.row}>
@@ -425,7 +383,7 @@ function MealDocument({
       <View style={styles.left}>
         <Text style={styles.listItem}>
           {calculateTolalByPersonCount({
-            studentsCount,
+            personCount,
             count: el.getCellValue("Count") as number,
             measurePoint: getMeasureTotalPointByIngredientName( ingredientsRecords, el.getCellValueAsString("Ingredient"))
           }
@@ -455,7 +413,7 @@ function MealDocument({
       <View style={[styles.row, {}]}>
         <View style={styles.left}>
           <Text style={styles.text}>
-            {i18next.t("ingredientsForCountPeople", { studentsCount })}:
+            {i18next.t("ingredientsForCountPeople", { personCount })}:
           </Text>
           {ingredients}
         </View>

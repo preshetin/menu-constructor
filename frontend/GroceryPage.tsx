@@ -7,6 +7,7 @@ import {
   MEALS_TABLE_NAME,
   MEAL_INGREDIENTS_TABLE_NAME,
   INGREDIENTS_TABLE_NAME,
+  getIngredientsForMealsList,
 } from "./shared";
 import { globalConfig } from "@airtable/blocks";
 
@@ -31,12 +32,14 @@ function GroceryPage() {
   const ingredientsRecords = useRecords(ingredientsTable);
 
   const studentsCount = globalConfig.get('studentsCount') as unknown as number;
+  const newStudentsCount = globalConfig.get('newStudentsCount') as unknown as number;
 
-  let shoppingListPerPerson: { [ingredieng: string]: number } = {};
+  let shoppingListPerPerson: { [ingredient: string]: number } = {};
   let leftoversObj: { [ingredient: string]: number } = {};
-  let shoppingListArr = [];
 
   const activeDays = daysRecords.filter((el) => el.getCellValue("Активно"));
+
+  let mealsOfAllDays: ReferenceType[] = [];
 
   for (const dayRecord of activeDays) {
     // const meals = dayRecord.getCellValue("Блюда") as ReferenceRecordType;
@@ -51,46 +54,12 @@ function GroceryPage() {
       ? (dayRecord.getCellValue("Полдник") as ReferenceType[])
       : [];
 
-    let meals: ReferenceType[] = [];
-    meals = meals.concat(breakfastMeals);
-    meals = meals.concat(lunchMeals);
-    meals = meals.concat(teaMeals);
-
-    if (meals) {
-      for (const meal of meals) {
-        shoppingListArr.push(meal.name);
-
-        const mealIngredients = mealIngredientsRecords.filter((el) => {
-          const cell = el.getCellValue("Meal") as any; // TODO: find out Type
-          return cell[0].name === meal.name;
-        });
-
-        for (const mealIngredient of mealIngredients) {
-          const ingredient = mealIngredient.getCellValue("Ingredient")[0];
-
-          const ingredientRecord = ingredientsRecords.find(
-            (el) => el.id === ingredient.id
-          );
-
-          const ingredientName = ingredient.name;
-          const leftoverCount = ingredientRecord.getCellValue(
-            "Остатки"
-          ) as number;
-          leftoversObj[ingredientName] = leftoverCount;
-
-          const count = mealIngredient.getCellValue("Count") as number;
-          shoppingListArr.push(`${ingredientName}: ${count}`);
-          if (shoppingListPerPerson.hasOwnProperty(ingredientName)) {
-            // add value to existing
-            shoppingListPerPerson[ingredientName] += count;
-          } else {
-            //create property with initial value
-            shoppingListPerPerson[ingredientName] = count;
-          }
-        }
-      }
-    }
+    mealsOfAllDays = mealsOfAllDays.concat(breakfastMeals);
+    mealsOfAllDays = mealsOfAllDays.concat(lunchMeals);
+    mealsOfAllDays = mealsOfAllDays.concat(teaMeals);
   }
+    
+  const ingredientsForAllMealsOfAllDays = getIngredientsForMealsList(mealsOfAllDays, {mealsRecords, mealIngredientsRecords, ingredientsRecords, studentsCount, newStudentsCount});
 
   return (
     <Box padding={1}>
@@ -123,34 +92,23 @@ function GroceryPage() {
         `}
       </style>
       <table className="styled-table">
-        {Object.keys(shoppingListPerPerson)
-          .sort()
-          .filter((el) => el !== "Вода")
-          .map((key: string) => {
-            const total = calculateTolalByPersonCount({
-              studentsCount,
-              count: shoppingListPerPerson[key],
-              measurePoint: getMeasureTotalPointByIngredientName( ingredientsRecords, key),
-              leftoverCount: leftoversObj[key]
-            });
+        {ingredientsForAllMealsOfAllDays.map(el => {
+          const leftoverCount = +ingredientsRecords.find(elem => elem.name === el.ingredient).getCellValueAsString('Остатки');
 
-            if (total <= 0) {
-              return null;
-            }
+          const resultCount = el.count - leftoverCount;
 
-            return (
+          if (resultCount < 0) return null;
+
+          return (
               <tr style={{ borderBottom: "1px solid #dddddd" }}>
-                <td>{key}</td>
-                <td>{total}</td>
+                <td>{el.ingredient}</td>
+                <td>{resultCount.toLocaleString('ru')}</td>
                 <td>
-                  {getMeasureTotalPointByIngredientName(
-                    ingredientsRecords,
-                    key
-                  )}
+                  {el.type}
                 </td>
               </tr>
-            );
-          })}
+          )
+        })}
       </table>
     </Box>
   );

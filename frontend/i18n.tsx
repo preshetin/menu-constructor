@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 
 const translationEnglish = {
   ingredientsForCountPeople:
-    "Ingredients for {{studentsCount}} people",
+    "Ingredients for {{personCount}} people",
   recipeFieldName:
     "Recipe EN",
   line3:
@@ -12,7 +12,7 @@ const translationEnglish = {
 
 const translationRussian = {
   ingredientsForCountPeople:
-    "Ингредиенты для {{studentsCount}} человек",
+    "Ингредиенты для {{personCount}} человек",
   recipeFieldName:
     "Рецепт приготовления",
   line3:

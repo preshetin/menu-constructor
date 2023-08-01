@@ -17,8 +17,9 @@ function MealPlannerApp() {
 
   const globalConfig = useGlobalConfig();
   const studentsCount = globalConfig.get('studentsCount');
+  const newStudentsCount = globalConfig.get('newStudentsCount');
 
-  if (!studentsCount) {
+  if (!studentsCount || !newStudentsCount) {
     return (
     <Box padding={3}>
       <Box>
@@ -30,8 +31,16 @@ function MealPlannerApp() {
             width={150}
           />
         </FormField>
+        <FormField label="Новые студенты">
+          <InputSynced
+            globalConfigKey="newStudentsCount"
+            type="number"
+            placeholder="Number of new students"
+            width={150}
+          />
+        </FormField>
       </Box>
-      <Text size="xlarge">введите 👆 количество студентов</Text>
+      <Text size="xlarge">введите 👆 количество студентов и количество новых студентов</Text>
       </Box>)
   }
 
@@ -45,6 +54,14 @@ function MealPlannerApp() {
             globalConfigKey="studentsCount"
             type="number"
             placeholder="Number of students"
+            width={150}
+          />
+        </FormField>
+        <FormField label="Новые студенты">
+          <InputSynced
+            globalConfigKey="newStudentsCount"
+            type="number"
+            placeholder="Number of new students"
             width={150}
           />
         </FormField>

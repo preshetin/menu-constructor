@@ -43,12 +43,12 @@ export function getMeasureTotalPointByIngredientName(ingredientsRecords: Record[
 }
 
 export function calculateTolalByPersonCount({
-  studentsCount,
+  personCount,
   count,
   measurePoint,
   leftoverCount,
 }: {
-  studentsCount: number;
+  personCount: number;
   count: number;
   measurePoint: string;
   leftoverCount?: number;
@@ -56,11 +56,96 @@ export function calculateTolalByPersonCount({
   let result = count;
 
   if (measurePoint === "кг" || measurePoint === "л") {
-    result = (count / 1000) * studentsCount;
+    result = (count / 1000) * personCount;
   }
   if (leftoverCount) {
     result -= leftoverCount;
   }
 
   return Math.round(result * 10) / 10;
+}
+
+
+export function getPersonCountByMeal(mealRecord: Record, {studentsCount, newStudentsCount}: {studentsCount: number, newStudentsCount: number}): number {
+  const consumerGroup = mealRecord.getCellValueAsString('Потребители');
+
+  let personCount = 0;
+  switch (consumerGroup) {
+    case 'новые студенты':
+      personCount = newStudentsCount;
+      break;
+    case 'все студенты':
+      personCount = studentsCount;
+      break;
+    case 'старые студенты':
+      personCount = studentsCount - newStudentsCount;
+      break;
+    default:
+      throw new Error('unknown consumer type, can be only все студенты, новые студенты, старые студенты')
+  }
+
+  return personCount;
+}
+
+export function getIngredientsForMealsList(mealsList, {mealsRecords, mealIngredientsRecords, ingredientsRecords, studentsCount, newStudentsCount}): IngredientWithPortion[]  {
+  let ingredientsForTheDayArr: IngredientWithPortion[] = [];
+
+  for (const meal of mealsList) {
+    const mealRecord = mealsRecords.find((el) => el.id === meal.id);
+    const currentMealIngredients = mealIngredientsRecords.filter((el) => {
+      const cell = el.getCellValue("Meal") as any; // TODO: find out Type
+      return cell[0].name === mealRecord.name;
+    });
+    ingredientsForTheDayArr = ingredientsForTheDayArr.concat(
+      currentMealIngredients.map((el) => {
+        const mealId = el.getCellValue("Meal")[0].id;
+        const meal = mealsRecords.find(el => el.id === mealId) as Record;
+        let personCount = getPersonCountByMeal(meal, {studentsCount, newStudentsCount});
+        return {
+          ingredient: el.getCellValueAsString("Ingredient"),
+          count: calculateTolalByPersonCount({
+            personCount,
+            count: el.getCellValue("Count") as number,
+            measurePoint: getMeasureTotalPointByIngredientName( ingredientsRecords, el.getCellValueAsString("Ingredient"))
+          }),
+          type: getMeasureTotalPointByIngredientName(
+            ingredientsRecords,
+            el.getCellValueAsString("Ingredient")
+          ),
+        }
+      }
+      )
+    );
+  }
+
+  let combinedIngredientsForTheDayArr: IngredientWithPortion[] = [];
+
+  for (const ingredientForTheDay of ingredientsForTheDayArr) {
+    if (
+      combinedIngredientsForTheDayArr.some(
+        (el) => el.ingredient === ingredientForTheDay.ingredient
+      )
+    ) {
+      combinedIngredientsForTheDayArr.find((el, i) => {
+        if (el.ingredient === ingredientForTheDay.ingredient) {
+          combinedIngredientsForTheDayArr[i] = {
+            ingredient: el.ingredient,
+            count: el.count + ingredientForTheDay.count,
+            type: el.type,
+          };
+        }
+      });
+    } else {
+      combinedIngredientsForTheDayArr.push(ingredientForTheDay);
+    }
+  }
+  combinedIngredientsForTheDayArr = combinedIngredientsForTheDayArr
+    .filter((el) => el.ingredient !== "Вода")
+    .sort(function(a, b) {
+      var textA = a.ingredient.toUpperCase();
+      var textB = b.ingredient.toUpperCase();
+      return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+    })
+
+  return combinedIngredientsForTheDayArr;
 }
