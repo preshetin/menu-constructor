@@ -18,7 +18,7 @@ import {
 import MenuDocument from "./menuPdf";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 
-function MealsPage({ studentsCount }: { studentsCount: number }) {
+function MealsPage() {
   const [dayNumber, setDayNumber] = useState(0);
 
   const base = useBase();
@@ -60,7 +60,6 @@ function MealsPage({ studentsCount }: { studentsCount: number }) {
         <MenuDocument
           key={dayNumber}
           dayRecord={daysRecords[dayNumber]}
-          studentsCount={studentsCount}
           mealsRecords={mealsRecords}
           mealIngredientsRecords={mealIngredientsRecords}
           ingredientsRecords={ingredientsRecords}

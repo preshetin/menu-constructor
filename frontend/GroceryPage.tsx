@@ -8,15 +8,14 @@ import {
   MEAL_INGREDIENTS_TABLE_NAME,
   INGREDIENTS_TABLE_NAME,
 } from "./shared";
+import { globalConfig } from "@airtable/blocks";
 
 type ReferenceType = {
   id: "string";
   name: "string";
 };
 
-type ReferenceRecordType = ReferenceType[] | null;
-
-function GroceryPage({ studentsCount }: { studentsCount: number }) {
+function GroceryPage() {
   const base = useBase();
 
   const menuTable = base.getTableByName(MENU_TABLE_NAME);
@@ -30,6 +29,8 @@ function GroceryPage({ studentsCount }: { studentsCount: number }) {
 
   const ingredientsTable = base.getTableByName(INGREDIENTS_TABLE_NAME);
   const ingredientsRecords = useRecords(ingredientsTable);
+
+  const studentsCount = globalConfig.get('studentsCount') as unknown as number;
 
   let shoppingListPerPerson: { [ingredieng: string]: number } = {};
   let leftoversObj: { [ingredient: string]: number } = {};

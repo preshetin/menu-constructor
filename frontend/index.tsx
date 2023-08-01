@@ -2,9 +2,10 @@ import {
   TextButton,
   initializeBlock,
   Box,
-  Input,
   Text,
   FormField,
+  useGlobalConfig,
+  InputSynced,
 } from "@airtable/blocks/ui";
 import React, { useState } from "react";
 import "./styles.css";
@@ -12,8 +13,27 @@ import GroceryPage from "./GroceryPage";
 import MealsPage from "./MealsPage";
 
 function MealPlannerApp() {
-  const [studentsCount, setStudentsCount] = useState(60);
   const [page, setPage] = useState("meals"); // or 'print' or 'grocery'
+
+  const globalConfig = useGlobalConfig();
+  const studentsCount = globalConfig.get('studentsCount');
+
+  if (!studentsCount) {
+    return (
+    <Box padding={3}>
+      <Box>
+        <FormField label="Студентов на курсе">
+          <InputSynced
+            globalConfigKey="studentsCount"
+            type="number"
+            placeholder="Number of students"
+            width={150}
+          />
+        </FormField>
+      </Box>
+      <Text size="xlarge">введите 👆 количество студентов</Text>
+      </Box>)
+  }
 
   // return JSON.stringify(daysRecords[0].getCellValue("Блюда"))
 
@@ -21,11 +41,11 @@ function MealPlannerApp() {
     <Box padding={3}>
       <Box>
         <FormField label="Студентов на курсе">
-          <Input
-            value={studentsCount}
-            width={150}
+          <InputSynced
+            globalConfigKey="studentsCount"
             type="number"
-            onChange={(e) => setStudentsCount(e.target.value)}
+            placeholder="Number of students"
+            width={150}
           />
         </FormField>
       </Box>
@@ -47,9 +67,9 @@ function MealPlannerApp() {
         Закупки
       </TextButton>
 
-      {page === "grocery" && <GroceryPage studentsCount={studentsCount} />}
+      {page === "grocery" && <GroceryPage />}
 
-      {page === "meals" && <MealsPage studentsCount={studentsCount} />}
+      {page === "meals" && <MealsPage />}
     </Box>
   );
 }

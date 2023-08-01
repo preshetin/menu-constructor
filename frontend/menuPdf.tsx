@@ -17,6 +17,7 @@ import {
   IngredientWithPortion,
   RECIPE_FIELD_NAME,
 } from "./shared";
+import { globalConfig } from "@airtable/blocks";
 
 type ReferenceType = {
   id: "string";
@@ -86,7 +87,6 @@ type MenuProps = {
   dayRecord: Record;
   mealsRecords: Record[];
   mealIngredientsRecords: Record[];
-  studentsCount: number;
   ingredientsRecords: Record[];
 };
 
@@ -95,9 +95,11 @@ function MenuDocument({
   dayRecord,
   mealIngredientsRecords,
   mealsRecords,
-  studentsCount,
   ingredientsRecords,
 }: MenuProps) {
+
+  const studentsCount = globalConfig.get('studentsCount') as unknown as number;
+
   const breakfastMeals = dayRecord.getCellValue("Завтрак")
     ? (dayRecord.getCellValue("Завтрак") as ReferenceType[])
     : [];
