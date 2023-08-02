@@ -73,7 +73,7 @@ function MealPlannerApp() {
         style={{ margin: 10 }}
         icon="print"
       >
-        Меню для повара
+        Меню + Раздача
       </TextButton>
       <TextButton
         onClick={() => setPage("grocery")}
