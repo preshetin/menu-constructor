@@ -1,8 +1,6 @@
 import React from "react";
 import { useBase, useRecords, Box, Text } from "@airtable/blocks/ui";
 import {
-  calculateTolalByPersonCount,
-  getMeasureTotalPointByIngredientName,
   MENU_TABLE_NAME,
   MEALS_TABLE_NAME,
   MEAL_INGREDIENTS_TABLE_NAME,
@@ -11,7 +9,7 @@ import {
 } from "./shared";
 import { globalConfig } from "@airtable/blocks";
 import Field from "@airtable/blocks/dist/types/src/models/field";
-import {FieldType} from '@airtable/blocks/models';
+import { FieldType } from "@airtable/blocks/models";
 
 type ReferenceType = {
   id: "string";
@@ -33,11 +31,10 @@ function GroceryPage() {
   const ingredientsTable = base.getTableByName(INGREDIENTS_TABLE_NAME);
   const ingredientsRecords = useRecords(ingredientsTable);
 
-  const studentsCount = globalConfig.get('studentsCount') as unknown as number;
-  const newStudentsCount = globalConfig.get('newStudentsCount') as unknown as number;
-
-  let shoppingListPerPerson: { [ingredient: string]: number } = {};
-  let leftoversObj: { [ingredient: string]: number } = {};
+  const studentsCount = globalConfig.get("studentsCount") as unknown as number;
+  const newStudentsCount = globalConfig.get(
+    "newStudentsCount"
+  ) as unknown as number;
 
   const activeDays = daysRecords.filter((el) => el.getCellValue("Активно"));
 
@@ -60,15 +57,24 @@ function GroceryPage() {
     mealsOfAllDays = mealsOfAllDays.concat(lunchMeals);
     mealsOfAllDays = mealsOfAllDays.concat(teaMeals);
   }
-    
-  const ingredientsForAllMealsOfAllDays = getIngredientsForMealsList(mealsOfAllDays, {mealsRecords, mealIngredientsRecords, ingredientsRecords, studentsCount, newStudentsCount});
 
-  const purchasePlaceField = ingredientsTable.getFieldByName('Место покупки');
-  const purchagePlaceChoices = buildPurchagePlaceChoices(purchasePlaceField)
+  const ingredientsForAllMealsOfAllDays = getIngredientsForMealsList(
+    mealsOfAllDays,
+    {
+      mealsRecords,
+      mealIngredientsRecords,
+      ingredientsRecords,
+      studentsCount,
+      newStudentsCount,
+    }
+  );
+
+  const purchasePlaceField = ingredientsTable.getFieldByName("Место покупки");
+  const purchagePlaceChoices = buildPurchagePlaceChoices(purchasePlaceField);
 
   return (
     <Box padding={1}>
-      <Text size="large" textColor="light" style={{marginBottom: 20}}>
+      <Text size="large" textColor="light" style={{ marginBottom: 20 }}>
         Закупить, чтобы хватило до конца курса
       </Text>
       <style>
@@ -96,33 +102,33 @@ function GroceryPage() {
           }
         `}
       </style>
-      {purchagePlaceChoices.map(placeOption => (
+      {purchagePlaceChoices.map((placeOption) => (
         <>
-      <Text size="xlarge" textColor="default">
-        {placeOption.name}
-      </Text>
-      <table className="styled-table">
-        {ingredientsForAllMealsOfAllDays.filter(el => el.purchasePlaceName === placeOption.name).map(el => {
-          const leftoverCount = +ingredientsRecords.find(elem => elem.name === el.ingredient).getCellValueAsString('Остатки');
+          <Text size="xlarge" textColor="default">
+            {placeOption.name}
+          </Text>
+          <table className="styled-table">
+            {ingredientsForAllMealsOfAllDays
+              .filter((el) => el.purchasePlaceName === placeOption.name)
+              .map((el) => {
+                const leftoverCount = +ingredientsRecords
+                  .find((elem) => elem.name === el.ingredient)
+                  .getCellValueAsString("Остатки");
 
-          const resultCount = el.count - leftoverCount;
+                const resultCount = el.count - leftoverCount;
 
-          if (resultCount < 0) return null;
+                if (resultCount < 0) return null;
 
-          return (
-              <tr style={{ borderBottom: "1px solid #dddddd" }}>
-                <td>{el.ingredient}</td>
-                <td>{resultCount.toLocaleString('ru')}</td>
-                <td>
-                  {el.type}
-                </td>
-                <td>
-                  {el.comment}
-                </td>
-              </tr>
-          )
-        })}
-      </table>
+                return (
+                  <tr style={{ borderBottom: "1px solid #dddddd" }}>
+                    <td>{el.ingredient}</td>
+                    <td>{resultCount.toLocaleString("ru")}</td>
+                    <td>{el.type}</td>
+                    <td>{el.comment}</td>
+                  </tr>
+                );
+              })}
+          </table>
         </>
       ))}
     </Box>
@@ -135,12 +141,14 @@ function buildPurchagePlaceChoices(field: Field) {
   const fieldConfig = field.config;
 
   if (fieldConfig.type === FieldType.SINGLE_SELECT) {
-      return fieldConfig.options.choices;
-  } else if (fieldConfig.type === FieldType.MULTIPLE_LOOKUP_VALUES && fieldConfig.options.isValid) {
-      if (fieldConfig.options.result.type === FieldType.SINGLE_SELECT) {
-          return fieldConfig.options.result.options.choices;
-      }
+    return fieldConfig.options.choices;
+  } else if (
+    fieldConfig.type === FieldType.MULTIPLE_LOOKUP_VALUES &&
+    fieldConfig.options.isValid
+  ) {
+    if (fieldConfig.options.result.type === FieldType.SINGLE_SELECT) {
+      return fieldConfig.options.result.options.choices;
+    }
   }
-  return []
+  return [];
 }
-
