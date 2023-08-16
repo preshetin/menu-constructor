@@ -1,4 +1,5 @@
 import Record from "@airtable/blocks/dist/types/src/models/record";
+import { initReactI18next } from "react-i18next";
 
 export const MENU_TABLE_NAME = "Меню";
 export const MEALS_TABLE_NAME = "Блюда";
@@ -13,6 +14,7 @@ export type IngredientWithPortion = {
   count: number;
   type: string;
   comment: string;
+  purchasePlaceName: string;
 }
 
 /*
@@ -115,7 +117,8 @@ export function getIngredientsForMealsList(mealsList, {mealsRecords, mealIngredi
             ingredientsRecords,
             el.getCellValueAsString("Ingredient")
           ),
-          comment: ingredientRecord.getCellValueAsString('Советы по закупкам') ? ingredientRecord.getCellValueAsString('Советы по закупкам') : ''
+          comment: ingredientRecord.getCellValueAsString('Советы по закупкам') ? ingredientRecord.getCellValueAsString('Советы по закупкам') : '',
+          purchasePlaceName: ingredientRecord.getCellValueAsString('Место покупки') ? ingredientRecord.getCellValueAsString('Место покупки') : '' 
         }
       }
       )
@@ -137,6 +140,7 @@ export function getIngredientsForMealsList(mealsList, {mealsRecords, mealIngredi
             count: el.count + ingredientForTheDay.count,
             type: el.type,
             comment: el.comment,
+            purchasePlaceName: el.purchasePlaceName,
           };
         }
       });

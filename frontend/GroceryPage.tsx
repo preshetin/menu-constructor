@@ -10,6 +10,8 @@ import {
   getIngredientsForMealsList,
 } from "./shared";
 import { globalConfig } from "@airtable/blocks";
+import Field from "@airtable/blocks/dist/types/src/models/field";
+import {FieldType} from '@airtable/blocks/models';
 
 type ReferenceType = {
   id: "string";
@@ -61,15 +63,18 @@ function GroceryPage() {
     
   const ingredientsForAllMealsOfAllDays = getIngredientsForMealsList(mealsOfAllDays, {mealsRecords, mealIngredientsRecords, ingredientsRecords, studentsCount, newStudentsCount});
 
+  const purchasePlaceField = ingredientsTable.getFieldByName('Место покупки');
+  const purchagePlaceChoices = buildPurchagePlaceChoices(purchasePlaceField)
+
   return (
     <Box padding={1}>
-      <Text size="large" textColor="light">
+      <Text size="large" textColor="light" style={{marginBottom: 20}}>
         Закупить, чтобы хватило до конца курса
       </Text>
       <style>
         {`.styled-table {
               border-collapse: collapse;
-              margin: 25px 0;
+              margin: 5px 0 25px 0;
               font-size: 0.9em;
           }
 
@@ -91,8 +96,13 @@ function GroceryPage() {
           }
         `}
       </style>
+      {purchagePlaceChoices.map(placeOption => (
+        <>
+      <Text size="xlarge" textColor="default">
+        {placeOption.name}
+      </Text>
       <table className="styled-table">
-        {ingredientsForAllMealsOfAllDays.map(el => {
+        {ingredientsForAllMealsOfAllDays.filter(el => el.purchasePlaceName === placeOption.name).map(el => {
           const leftoverCount = +ingredientsRecords.find(elem => elem.name === el.ingredient).getCellValueAsString('Остатки');
 
           const resultCount = el.count - leftoverCount;
@@ -113,8 +123,24 @@ function GroceryPage() {
           )
         })}
       </table>
+        </>
+      ))}
     </Box>
   );
 }
 
 export default GroceryPage;
+
+function buildPurchagePlaceChoices(field: Field) {
+  const fieldConfig = field.config;
+
+  if (fieldConfig.type === FieldType.SINGLE_SELECT) {
+      return fieldConfig.options.choices;
+  } else if (fieldConfig.type === FieldType.MULTIPLE_LOOKUP_VALUES && fieldConfig.options.isValid) {
+      if (fieldConfig.options.result.type === FieldType.SINGLE_SELECT) {
+          return fieldConfig.options.result.options.choices;
+      }
+  }
+  return []
+}
+
