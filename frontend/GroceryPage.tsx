@@ -106,6 +106,9 @@ function GroceryPage() {
                 <td>
                   {el.type}
                 </td>
+                <td>
+                  {el.comment}
+                </td>
               </tr>
           )
         })}

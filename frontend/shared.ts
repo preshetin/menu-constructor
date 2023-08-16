@@ -12,6 +12,7 @@ export type IngredientWithPortion = {
   ingredient: string;
   count: number;
   type: string;
+  comment: string;
 }
 
 /*
@@ -100,6 +101,8 @@ export function getIngredientsForMealsList(mealsList, {mealsRecords, mealIngredi
       currentMealIngredients.map((el) => {
         const mealId = el.getCellValue("Meal")[0].id;
         const meal = mealsRecords.find(el => el.id === mealId) as Record;
+
+        const ingredientRecord = ingredientsRecords.find(elem => elem.id === el.getCellValue('Ingredient')[0].id) as Record;
         let personCount = getPersonCountByMeal(meal, {studentsCount, newStudentsCount});
         return {
           ingredient: el.getCellValueAsString("Ingredient"),
@@ -112,6 +115,7 @@ export function getIngredientsForMealsList(mealsList, {mealsRecords, mealIngredi
             ingredientsRecords,
             el.getCellValueAsString("Ingredient")
           ),
+          comment: ingredientRecord.getCellValueAsString('Советы по закупкам') ? ingredientRecord.getCellValueAsString('Советы по закупкам') : ''
         }
       }
       )
@@ -132,6 +136,7 @@ export function getIngredientsForMealsList(mealsList, {mealsRecords, mealIngredi
             ingredient: el.ingredient,
             count: el.count + ingredientForTheDay.count,
             type: el.type,
+            comment: el.comment,
           };
         }
       });
