@@ -44,22 +44,21 @@ Font.register({
 
 const styles = StyleSheet.create({
   body: {
-    paddingTop: 35,
-    paddingBottom: 65,
-    paddingHorizontal: 35,
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
     fontFamily: "Roboto",
   },
   title: {
-    fontSize: 20,
+    fontSize: 15,
     textAlign: "center",
     fontFamily: "Roboto",
   },
   subtitle: {
-    fontSize: 14,
-    marginTop: 16,
+    fontSize: 12,
     marginBottom: 0,
-    marginLeft: 8,
-    marginRight: 8,
+    marginLeft: 6,
+    marginRight: 6,
     fontFamily: "Roboto",
   },
   row: {
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
   },
   text: {
-    margin: 8,
+    margin: 6,
     fontSize: 8,
     // textAlign: 'justify',
     fontFamily: "Roboto",
@@ -217,7 +216,7 @@ function MenuDocument({
       <Page size="A4" style={styles.body}>
         <Text style={{ ...styles.title, marginBottom: 10 }}>{dayRecord.name} — Раздача </Text>
         {breakfastDistributionMealDocuments.length && (
-          <View style={{ marginBottom: 15 }}>
+          <View style={{ marginBottom: 0 }}>
             <Text
               style={{
                 ...styles.title,
@@ -228,11 +227,11 @@ function MenuDocument({
             >
               Завтрак
             </Text>
-            <View style={{ border: 1, padding: 5 }}>{breakfastDistributionMealDocuments}</View>
+            <View style={{ border: 1, borderTop: 0, borderBottom: 0, padding: 5 }}>{breakfastDistributionMealDocuments}</View>
           </View>
         )}
         {lunchDistributionMealDocuments.length && (
-          <View style={{ marginBottom: 15 }}>
+          <View style={{ marginBottom: 0 }}>
             <Text
               style={{
                 ...styles.title,
@@ -243,11 +242,11 @@ function MenuDocument({
             >
               Обед
             </Text>
-            <View style={{ border: 1, padding: 5 }}>{lunchDistributionMealDocuments}</View>
+            <View style={{ border: 1, borderTop: 0, borderBottom: 0, padding: 5 }}>{lunchDistributionMealDocuments}</View>
           </View>
         )}
         {teaDistributionMealDocuments.length && (
-          <View style={{ marginBottom: 15 }}>
+          <View style={{ marginBottom: 0 }}>
             <Text
               style={{
                 ...styles.title,
@@ -258,14 +257,14 @@ function MenuDocument({
             >
               Полдник
             </Text>
-            <View style={{ border: 1, padding: 5 }}>{teaDistributionMealDocuments}</View>
+            <View style={{ border: 1, borderTop: 0, padding: 5 }}>{teaDistributionMealDocuments}</View>
           </View>
         )}
       </Page>
       <Page size="A4" style={styles.body}>
         <Text style={{ ...styles.title, marginBottom: 10 }}>{dayRecord.name} — Меню для повара </Text>
         {breakfastCookMealDocuments.length && (
-          <View style={{ marginBottom: 15 }}>
+          <View style={{ marginBottom: 0 }}>
             <Text
               style={{
                 ...styles.title,
@@ -276,11 +275,11 @@ function MenuDocument({
             >
               Завтрак
             </Text>
-            <View style={{ border: 1, padding: 5 }}>{breakfastCookMealDocuments}</View>
+            <View style={{ border: 1, borderTop: 0, borderBottom: 0, padding: 5 }}>{breakfastCookMealDocuments}</View>
           </View>
         )}
         {lunchCookMealDocuments.length && (
-          <View style={{ marginBottom: 15 }}>
+          <View style={{ marginBottom: 0 }}>
             <Text
               style={{
                 ...styles.title,
@@ -291,11 +290,11 @@ function MenuDocument({
             >
               Обед
             </Text>
-            <View style={{ border: 1, padding: 5 }}>{lunchCookMealDocuments}</View>
+            <View style={{ border: 1, borderTop: 0, borderBottom: 0, padding: 5 }}>{lunchCookMealDocuments}</View>
           </View>
         )}
         {teaCookMealDocuments.length && (
-          <View style={{ marginBottom: 15 }}>
+          <View style={{ marginBottom: 0 }}>
             <Text
               style={{
                 ...styles.title,
@@ -306,13 +305,16 @@ function MenuDocument({
             >
               Полдник
             </Text>
-            <View style={{ border: 1, padding: 5 }}>{teaCookMealDocuments}</View>
+            <View style={{ border: 1, borderTop: 0, padding: 5 }}>{teaCookMealDocuments}</View>
           </View>
         )}
-        <Text style={{ ...styles.title, marginTop: 20, marginBottom: 10 }}>
-          Все продукты дня {" "}
-        </Text>
         <View wrap={false}>
+          <Text style={{ ...styles.title, marginTop: 20, marginBottom: 10 }}>
+            Все продукты дня {" "}
+          </Text>
+          <Text style={{ ...styles.text }}>
+            Указано количество нетто (без кожуры)
+          </Text>
           {ingredientsForTheDayArr.map((el) => (
             <IngredientItem ingredientWithPortion={el} />
           ))}
