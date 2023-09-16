@@ -220,14 +220,14 @@ function MenuDocument({
             <Text
               style={{
                 ...styles.title,
-                border: 1,
+                border: 0.5,
                 borderBottom: 0,
                 backgroundColor: "lightgray",
               }}
             >
               Завтрак
             </Text>
-            <View style={{ border: 1, borderTop: 0, borderBottom: 0, padding: 5 }}>{breakfastDistributionMealDocuments}</View>
+            <View style={{ border: 0.5, borderTop: 0, borderBottom: 0, padding: 5 }}>{breakfastDistributionMealDocuments}</View>
           </View>
         )}
         {lunchDistributionMealDocuments.length && (
@@ -235,14 +235,14 @@ function MenuDocument({
             <Text
               style={{
                 ...styles.title,
-                border: 1,
+                border: 0.5,
                 borderBottom: 0,
                 backgroundColor: "lightgray",
               }}
             >
               Обед
             </Text>
-            <View style={{ border: 1, borderTop: 0, borderBottom: 0, padding: 5 }}>{lunchDistributionMealDocuments}</View>
+            <View style={{ border: 0.5, borderTop: 0, borderBottom: 0, padding: 5 }}>{lunchDistributionMealDocuments}</View>
           </View>
         )}
         {teaDistributionMealDocuments.length && (
@@ -250,14 +250,14 @@ function MenuDocument({
             <Text
               style={{
                 ...styles.title,
-                border: 1,
+                border: 0.5,
                 borderBottom: 0,
                 backgroundColor: "lightgray",
               }}
             >
               Полдник
             </Text>
-            <View style={{ border: 1, borderTop: 0, padding: 5 }}>{teaDistributionMealDocuments}</View>
+            <View style={{ border: 0.5, borderTop: 0, padding: 5 }}>{teaDistributionMealDocuments}</View>
           </View>
         )}
       </Page>
@@ -268,14 +268,14 @@ function MenuDocument({
             <Text
               style={{
                 ...styles.title,
-                border: 1,
+                border: 0.5,
                 borderBottom: 0,
                 backgroundColor: "lightgray",
               }}
             >
               Завтрак
             </Text>
-            <View style={{ border: 1, borderTop: 0, borderBottom: 0, padding: 5 }}>{breakfastCookMealDocuments}</View>
+            <View style={{ border: 0.5, borderTop: 0, borderBottom: 0, padding: 5 }}>{breakfastCookMealDocuments}</View>
           </View>
         )}
         {lunchCookMealDocuments.length && (
@@ -283,14 +283,14 @@ function MenuDocument({
             <Text
               style={{
                 ...styles.title,
-                border: 1,
+                border: 0.5,
                 borderBottom: 0,
                 backgroundColor: "lightgray",
               }}
             >
               Обед
             </Text>
-            <View style={{ border: 1, borderTop: 0, borderBottom: 0, padding: 5 }}>{lunchCookMealDocuments}</View>
+            <View style={{ border: 0.5, borderTop: 0, borderBottom: 0, padding: 5 }}>{lunchCookMealDocuments}</View>
           </View>
         )}
         {teaCookMealDocuments.length && (
@@ -298,14 +298,14 @@ function MenuDocument({
             <Text
               style={{
                 ...styles.title,
-                border: 1,
+                border: 0.5,
                 borderBottom: 0,
                 backgroundColor: "lightgray",
               }}
             >
               Полдник
             </Text>
-            <View style={{ border: 1, borderTop: 0, padding: 5 }}>{teaCookMealDocuments}</View>
+            <View style={{ border: 0.5, borderTop: 0, padding: 5 }}>{teaCookMealDocuments}</View>
           </View>
         )}
         <View wrap={false}>
